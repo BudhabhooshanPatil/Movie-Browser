@@ -12,6 +12,11 @@
 		E10315E7225B655000A77950 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E10315E5225B655000A77950 /* Main.storyboard */; };
 		E10315E9225B655600A77950 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E10315E8225B655600A77950 /* Assets.xcassets */; };
 		E10315EC225B655600A77950 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E10315EA225B655600A77950 /* LaunchScreen.storyboard */; };
+		E10315F9225B66FC00A77950 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10315F4225B66FC00A77950 /* HTTPMethod.swift */; };
+		E10315FA225B66FC00A77950 /* HTTPRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10315F5225B66FC00A77950 /* HTTPRequest.swift */; };
+		E10315FB225B66FC00A77950 /* HTTPTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10315F6225B66FC00A77950 /* HTTPTask.swift */; };
+		E10315FC225B66FC00A77950 /* NetworkLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10315F7225B66FC00A77950 /* NetworkLogger.swift */; };
+		E10315FD225B66FC00A77950 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10315F8225B66FC00A77950 /* Routes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +27,11 @@
 		E10315E8225B655600A77950 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E10315EB225B655600A77950 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E10315ED225B655600A77950 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E10315F4225B66FC00A77950 /* HTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
+		E10315F5225B66FC00A77950 /* HTTPRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPRequest.swift; sourceTree = "<group>"; };
+		E10315F6225B66FC00A77950 /* HTTPTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPTask.swift; sourceTree = "<group>"; };
+		E10315F7225B66FC00A77950 /* NetworkLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkLogger.swift; sourceTree = "<group>"; };
+		E10315F8225B66FC00A77950 /* Routes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +64,7 @@
 		E10315E0225B655000A77950 /* Movie Browser */ = {
 			isa = PBXGroup;
 			children = (
+				E10315F3225B66FC00A77950 /* Networking */,
 				E10315E1225B655000A77950 /* AppDelegate.swift */,
 				E10315E3225B655000A77950 /* ViewController.swift */,
 				E10315E5225B655000A77950 /* Main.storyboard */,
@@ -62,6 +73,18 @@
 				E10315ED225B655600A77950 /* Info.plist */,
 			);
 			path = "Movie Browser";
+			sourceTree = "<group>";
+		};
+		E10315F3225B66FC00A77950 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				E10315F4225B66FC00A77950 /* HTTPMethod.swift */,
+				E10315F5225B66FC00A77950 /* HTTPRequest.swift */,
+				E10315F6225B66FC00A77950 /* HTTPTask.swift */,
+				E10315F7225B66FC00A77950 /* NetworkLogger.swift */,
+				E10315F8225B66FC00A77950 /* Routes.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,8 +158,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E10315FC225B66FC00A77950 /* NetworkLogger.swift in Sources */,
+				E10315FD225B66FC00A77950 /* Routes.swift in Sources */,
 				E10315E4225B655000A77950 /* ViewController.swift in Sources */,
+				E10315FB225B66FC00A77950 /* HTTPTask.swift in Sources */,
+				E10315FA225B66FC00A77950 /* HTTPRequest.swift in Sources */,
 				E10315E2225B655000A77950 /* AppDelegate.swift in Sources */,
+				E10315F9225B66FC00A77950 /* HTTPMethod.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
