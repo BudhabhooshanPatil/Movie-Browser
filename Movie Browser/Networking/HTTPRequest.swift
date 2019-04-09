@@ -8,29 +8,29 @@
 
 import Foundation
 
-enum ResultType<T> {
+enum ResultType {
     case success
-    case failure(T)
+    case failure
 }
 
-private func handleRsponse (_ response:HTTPURLResponse ,serverdata:Data) -> ResultType<Any> {
+private func handleRsponse (_ response:HTTPURLResponse ,serverdata:Data) -> ResultType {
     
     switch response.statusCode {
     case 200...299:
         return .success
     default:
-        return .failure(serverdata);
+        return .failure;
     }
 }
 internal typealias NetworkRouterCompletion = (_ data:Data? ,_ error:Error?)->();
 
-internal func dataTaskWith(request : URLRequest, completionHandler: @escaping NetworkRouterCompletion) {
+internal func httpRequest(request : URLRequest, completionHandler: @escaping NetworkRouterCompletion) {
     
     let session = URLSession.shared;
     
     let task = session.dataTask(with: request){ (data, response, error) -> Void in
         
-        NetworkLogger.log(request: request);
+        Logger.log(request: request);
         
         guard error == nil else {
             completionHandler(nil,error);
@@ -39,6 +39,7 @@ internal func dataTaskWith(request : URLRequest, completionHandler: @escaping Ne
         guard let content = data else {
             return;
         }
+        Logger.log(data: content);
         
         if let response = response as? HTTPURLResponse{
             
@@ -48,8 +49,8 @@ internal func dataTaskWith(request : URLRequest, completionHandler: @escaping Ne
             case .success:
                 completionHandler(data,nil);
                 break;
-            case .failure(let networkFailureError):
-                completionHandler(nil,networkFailureError as! Error);
+            case .failure:
+                completionHandler(nil ,nil);
                 break;
             }
         }
