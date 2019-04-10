@@ -36,7 +36,7 @@ class MoviesCell: UICollectionViewCell {
         self.contentView.addConstraints(horizontal2);
         self.contentView.addConstraints(vertical1);
         
-        let horizontal3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[rating]|", options: [], metrics: nil, views: views);
+        let horizontal3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[rating]-|", options: [], metrics: nil, views: views);
         let vertical2 = NSLayoutConstraint.constraints(withVisualFormat: "V:[rating]-|", options: [], metrics: nil, views: views);
         
         self.icon.addConstraints(horizontal3);
@@ -80,17 +80,20 @@ class MoviesCell: UICollectionViewCell {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
-        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 14.0);
+        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 18.0);
         label.translatesAutoresizingMaskIntoConstraints = false;
         label.textAlignment = .left;
-        label.textColor = .white;
+        label.textColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1);
         return label;
     }()
     
     public func bind(movie:Movie , indexPath:IndexPath) -> Void {
         name.text = movie.title;
         print(Int(movie.voteAverage));
-        rating.text = ratingsDisplay[Int(movie.voteAverage) - 1] ;
+        if Int(movie.voteAverage)-1 > 0 {
+            rating.text = ratingsDisplay[Int(movie.voteAverage) - 1] ;
+        }
+        
         downloadImage(url: URL(string: imageBasePath + movie.posterPath)!) { (_image) in
             
             DispatchQueue.main.async {
