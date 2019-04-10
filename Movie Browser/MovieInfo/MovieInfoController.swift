@@ -8,7 +8,7 @@
 
 import UIKit
 
-class InfoViewController: UIViewController {
+class MovieInfoController: UIViewController {
     
     private var infoMovie:Movie? = nil;
     
@@ -30,15 +30,14 @@ class InfoViewController: UIViewController {
         let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|[tableView]|", options: [], metrics: nil, views: ["tableView":tableView]);
         self.view.addConstraints(horizontal);
         self.view.addConstraints(vertical);
-        
     }
     lazy var tableView:UITableView = {
         
         let _tableView = UITableView(frame: .zero, style: .plain);
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.register(PosterTableViewCell.self, forCellReuseIdentifier: "PosterTableViewCell")         // register cell name
-        _tableView.register(OverviewTableViewCell.self, forCellReuseIdentifier: "OverviewTableViewCell")
+        _tableView.register(PosterCell.self, forCellReuseIdentifier: "PosterTableViewCell")         // register cell name
+        _tableView.register(OverviewCell.self, forCellReuseIdentifier: "OverviewTableViewCell")
         _tableView.separatorStyle = .none;
         _tableView.allowsSelection = false;
         return _tableView;
@@ -47,13 +46,13 @@ class InfoViewController: UIViewController {
         
         let view = UIView(frame: CGRect(x: 20, y: 0, width: self.view.frame.size.width, height: 44));
         let label = UILabel(frame: view.frame);
-        label.text = "OverView";
-        label.font = UIFont.boldSystemFont(ofSize: 20);
+        label.text = "Overview";
+        label.font = UIFont.boldSystemFont(ofSize: 25);
         view.addSubview(label);
         return view;
     }()
 }
-extension InfoViewController :UITableViewDelegate {
+extension MovieInfoController :UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.view.frame.size.width;
@@ -86,7 +85,7 @@ extension InfoViewController :UITableViewDelegate {
         return UIView();
     }
 }
-extension InfoViewController :UITableViewDataSource{
+extension MovieInfoController :UITableViewDataSource{
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return Int(2.0)
@@ -109,14 +108,14 @@ extension InfoViewController :UITableViewDataSource{
         
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "PosterTableViewCell", for: indexPath) as? PosterTableViewCell {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "PosterTableViewCell", for: indexPath) as? PosterCell {
                 cell.tag = indexPath.row;
                 cell.bind(movie: detailsofMovie, indexPath: indexPath);
                 return cell;
             }
         case 1:
             
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "OverviewTableViewCell", for: indexPath) as? OverviewTableViewCell{
+            if let cell = tableView.dequeueReusableCell(withIdentifier: "OverviewTableViewCell", for: indexPath) as? OverviewCell{
                 cell.bind(movie: detailsofMovie, indexPath: indexPath);
                 return cell;
             }

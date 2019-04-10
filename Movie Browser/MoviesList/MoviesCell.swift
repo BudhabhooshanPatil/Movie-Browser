@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CollectionViewCell: UICollectionViewCell {
+class MoviesCell: UICollectionViewCell {
     
     
     override init(frame: CGRect) {
@@ -59,7 +59,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     public func bind(movie:Movie , indexPath:IndexPath) -> Void {
         name.text = movie.title;
-        downloadImage(url: URL(string: MoviesViewController.imageBasePath + movie.posterPath)!) { (_image) in
+        downloadImage(url: URL(string: MoviesListController.imageBasePath + movie.posterPath)!) { (_image) in
             
             DispatchQueue.main.async {
                 if (self.tag == indexPath.row) {

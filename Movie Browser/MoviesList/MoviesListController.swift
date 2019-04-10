@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MoviesViewController: UIViewController{
+class MoviesListController: UIViewController{
     
     var currentPage:CGFloat = 1.0;
     
@@ -131,11 +131,11 @@ class MoviesViewController: UIViewController{
         collectionview.delegate = self;
         collectionview.alwaysBounceVertical = true;
         collectionview.backgroundColor = .white;
-        collectionview.register(CollectionViewCell.self, forCellWithReuseIdentifier: "Cell");
+        collectionview.register(MoviesCell.self, forCellWithReuseIdentifier: "Cell");
         return collectionview;
     }()
 }
-extension MoviesViewController : UISearchResultsUpdating {
+extension MoviesListController : UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
         searching = true;
@@ -146,7 +146,7 @@ extension MoviesViewController : UISearchResultsUpdating {
     }
 }
 
-extension MoviesViewController :UICollectionViewDataSource{
+extension MoviesListController :UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return moviesArray.count;
@@ -154,7 +154,7 @@ extension MoviesViewController :UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? CollectionViewCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? MoviesCell {
             cell.tag = indexPath.row;
             cell.bind(movie: moviesArray[indexPath.row], indexPath: indexPath);
             cell.layer.cornerRadius = 10
@@ -169,26 +169,42 @@ extension MoviesViewController :UICollectionViewDataSource{
         return UICollectionViewCell();
     }
 }
-extension MoviesViewController :UICollectionViewDelegate{
+extension MoviesListController :UICollectionViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let infoPage = InfoViewController()
+        let infoPage = MovieInfoController()
         infoPage.detailsofMovie = self.moviesArray[indexPath .row];
-        self.navigationController?.pushViewController(infoPage, animated: true)
         
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            
+            infoPage.modalPresentationStyle = .popover;
+            
+            if let popoverController = infoPage.popoverPresentationController {
+                popoverController.sourceView = collectionView.cellForItem(at: indexPath);
+                popoverController.sourceRect = CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width * 69/100, height: self.view.frame.size.height * 73/100);
+                popoverController.permittedArrowDirections = .any
+                self.present(infoPage, animated: true, completion: nil)
+            }
+        }else{
+             self.navigationController?.pushViewController(infoPage, animated: true)
+        }
     }
 }
-extension MoviesViewController : UICollectionViewDelegateFlowLayout {
+extension MoviesListController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let screenRect = UIScreen.main.bounds;
+        var screenWidth:CGFloat? = nil;
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            screenWidth = (screenRect.size.width / 3) - 16
+        }else{
+            screenWidth = (screenRect.size.width/2) - 16.0;
+        }
+        let screenHeight = screenWidth!*2 - 16.0;
         
-        let screenWidth = (screenRect.size.width/2) - 16.0;
-        let screenHeight = screenWidth*2 - 16.0;
-        
-        return CGSize(width: screenWidth, height: screenHeight);
+        return CGSize(width: screenWidth!, height: screenHeight);
     }
     func collectionView(_ collectionView: UICollectionView,  layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
@@ -202,7 +218,7 @@ extension MoviesViewController : UICollectionViewDelegateFlowLayout {
         return UIEdgeInsets.init(top: 8, left: 8, bottom: 8, right: 8)
     }
 }
-extension MoviesViewController :UIScrollViewDelegate {
+extension MoviesListController :UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
@@ -216,7 +232,7 @@ extension MoviesViewController :UIScrollViewDelegate {
         }
     }
 }
-extension MoviesViewController :UISearchBarDelegate{
+extension MoviesListController :UISearchBarDelegate{
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OverviewTableViewCell: UITableViewCell {
+class OverviewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -55,7 +55,7 @@ class OverviewTableViewCell: UITableViewCell {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
-        label.font = UIFont.systemFont(ofSize: 14.0, weight: .semibold);
+        label.font = UIFont(name: "HelveticaNeue-Medium", size: 20.0);
         label.translatesAutoresizingMaskIntoConstraints = false;
         label.numberOfLines = 0;
         label.textColor = .black;

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PosterTableViewCell: UITableViewCell {
+class PosterCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -59,7 +59,7 @@ class PosterTableViewCell: UITableViewCell {
         self.title.text = movie.originalTitle;
         self.releasedDate.text = date(releaseDate: movie.releaseDate);
         
-        downloadImage(url: URL(string: MoviesViewController.imageBasePath + movie.posterPath)!) { (_image) in
+        downloadImage(url: URL(string: MoviesListController.imageBasePath + movie.posterPath)!) { (_image) in
             
             DispatchQueue.main.async {
                 if (self.tag == indexPath.row) {
@@ -84,7 +84,7 @@ class PosterTableViewCell: UITableViewCell {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
-        label.font = UIFont.systemFont(ofSize: 14.0, weight: .semibold);
+        label.font = UIFont.systemFont(ofSize: 30.0, weight: .semibold);
         label.translatesAutoresizingMaskIntoConstraints = false;
         label.textColor = .white;
         label.textAlignment = .left
@@ -95,7 +95,7 @@ class PosterTableViewCell: UITableViewCell {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
-        label.font = UIFont.systemFont(ofSize: 14.0, weight: .semibold);
+        label.font = UIFont.systemFont(ofSize: 30.0, weight: .semibold);
         label.translatesAutoresizingMaskIntoConstraints = false;
         label.textAlignment = .left;
         label.textColor = .white;
@@ -116,7 +116,7 @@ class PosterTableViewCell: UITableViewCell {
         } else {
             print("There was an error decoding the string")
         }
-
+        
         return releaseDate;
     }
 }

@@ -13,7 +13,7 @@ public typealias Response = (_ data:Data? ,_ error:Error?) -> Void;
 
 func getTopMovies(page:Int = 1 , language:String? ,completionHandler:@escaping Response) {
     
-    let api = API(baseUrl: .version3, path: "movie/top_rated?page=\(page)&language=\(language ?? "en-US")&api_key=\(MoviesViewController.API_KEY)", httpMethod: .get).buildRequest;
+    let api = API(baseUrl: .version3, path: "movie/top_rated?page=\(page)&language=\(language ?? "en-US")&api_key=\(MoviesListController.API_KEY)", httpMethod: .get).buildRequest;
     
     httpRequest(request: api) { (data, error) in
         completionHandler(data,error);
@@ -21,7 +21,7 @@ func getTopMovies(page:Int = 1 , language:String? ,completionHandler:@escaping R
 }
 func getPopular(page:Int = 1 , language:String? ,completionHandler:@escaping Response){
     
-    let api = API(baseUrl: .version3, path: "movie/popular?page=\(page)&language=\(language ?? "en-US")&api_key=\(MoviesViewController.API_KEY)", httpMethod: .get).buildRequest;
+    let api = API(baseUrl: .version3, path: "movie/popular?page=\(page)&language=\(language ?? "en-US")&api_key=\(MoviesListController.API_KEY)", httpMethod: .get).buildRequest;
     
     httpRequest(request: api) { (data, error) in
         completionHandler(data,error);
@@ -29,7 +29,7 @@ func getPopular(page:Int = 1 , language:String? ,completionHandler:@escaping Res
 }
 func search (page:Int = 1 , language:String?,searchText:String,completionHandler:@escaping Response){
     
-    let api = API(baseUrl: .version3, path: "search/movie?page=\(page)&query=\(searchText.replacingOccurrences(of: " ", with: ""))&language=\(language ?? "en-US")&api_key=\(MoviesViewController.API_KEY)", httpMethod: .get).buildRequest;
+    let api = API(baseUrl: .version3, path: "search/movie?page=\(page)&query=\(searchText.replacingOccurrences(of: " ", with: ""))&language=\(language ?? "en-US")&api_key=\(MoviesListController.API_KEY)", httpMethod: .get).buildRequest;
     
     httpRequest(request: api) { (data, error) in
         completionHandler(data,error);
