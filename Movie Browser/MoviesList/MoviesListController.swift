@@ -10,16 +10,12 @@ import UIKit
 
 class MoviesListController: UIViewController{
     
-    var currentPage:CGFloat = 1.0;
+    var currentPage = 1;
     
     let decoder = JSONDecoder()
     var moviesArray:[Movie] = []
     var loading = false
     var searching = false;
-    
-    
-    static let imageBasePath = "https://image.tmdb.org/t/p/w185_and_h278_bestv2"
-    static let API_KEY = "53eafbc1ab15fcd88324c96a958d6ca5"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,20 +27,25 @@ class MoviesListController: UIViewController{
         self.view.addConstraints(horizontal);
         self.view.addConstraints(vertical);
         
-        topMovies();
+        nowPlaying();
         viewWillSetUpNaviagtionBar();
     }
     func viewWillSetUpNaviagtionBar() -> Void {
         
         navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.searchController = self.searchController;
-        self.navigationItem.title = "Top Rated";
+        
+        let orderButton = UIBarButtonItem(image: UIImage(named: "order"), style: .plain,target: self, action: #selector(showSimpleAlert));
+        self.navigationItem.rightBarButtonItem = orderButton;
     }
-    func topMovies() -> Void {
+    
+    func nowPlaying() -> Void {
+        
+        self.navigationItem.title = "Now Playing"
         
         loading = true;
         
-        getTopMovies(page: Int(currentPage), language: nil, completionHandler: { (data, error) in
+        getNowPlaying(page: currentPage, language: nil, completionHandler: { (data, error) in
             
             if let data = data{
                 do{
@@ -64,7 +65,39 @@ class MoviesListController: UIViewController{
             }
         });
     }
+    
+    func TopRatedMovies() -> Void {
+        
+        self.navigationItem.title = "Top Rated"
+        
+        loading = true;
+        
+        getTopMovies(page: Int(currentPage), language: nil, completionHandler: { (data, error) in
+            
+            if let data = data{
+                do{
+                    let movies_ = try self.decoder.decode(Movies.self, from: data);
+                    self.currentPage = self.currentPage + 1;
+                    self.moviesArray.removeAll();
+                    for _movie in movies_.results{
+                        self.moviesArray.append(Movie(_movie: _movie));
+                    }
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData();
+                        self.loading = false;
+                    }
+                }catch{
+                    self.loading = false;
+                    Logger.print(items: error.localizedDescription);
+                }
+            }
+        });
+    }
     func popularMovies() -> Void {
+        
+        self.navigationItem.title = "Popular Movies"
+        
+        loading = true;
         
         getPopular(page: Int(currentPage), language: nil) { (data, error) in
             
@@ -72,6 +105,7 @@ class MoviesListController: UIViewController{
                 do{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.currentPage = self.currentPage + 1;
+                    self.moviesArray.removeAll();
                     for _movie in movies_.results{
                         self.moviesArray.append(Movie(_movie: _movie));
                     }
@@ -85,10 +119,9 @@ class MoviesListController: UIViewController{
                 }
             }
         }
-        
     }
     func searchMovie(text:String) -> Void {
-    
+        
         search(language: nil, searchText: text) { (data, error) in
             
             if let data = data{
@@ -117,8 +150,6 @@ class MoviesListController: UIViewController{
         searchcontroller.searchResultsUpdater = self;
         searchcontroller.obscuresBackgroundDuringPresentation = false;
         searchcontroller.searchBar.placeholder = "Search Movies";
-        searchcontroller.searchBar.scopeButtonTitles = ["In Theaters", "Popular", "Top"]
-        searchcontroller.searchBar.delegate = self;
         navigationItem.searchController = searchcontroller;
         definesPresentationContext = true;
         return searchcontroller;
@@ -134,6 +165,24 @@ class MoviesListController: UIViewController{
         collectionview.register(MoviesCell.self, forCellWithReuseIdentifier: "Cell");
         return collectionview;
     }()
+    
+    @objc func showSimpleAlert() {
+        
+        let alert = UIAlertController(title: "Sort", message: "",preferredStyle: .actionSheet);
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil));
+        alert.addAction(UIAlertAction(title: "Most Popular", style: UIAlertAction.Style.default, handler: {(_) in
+            
+            self.currentPage = 1;
+            self.popularMovies();
+        }));
+        alert.addAction(UIAlertAction(title: "Highest Rated", style: UIAlertAction.Style.default, handler: {(_) in
+            
+            self.currentPage = 1;
+            self.TopRatedMovies();
+        }));
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 extension MoviesListController : UISearchResultsUpdating {
     
@@ -187,7 +236,7 @@ extension MoviesListController :UICollectionViewDelegate{
                 self.present(infoPage, animated: true, completion: nil)
             }
         }else{
-             self.navigationController?.pushViewController(infoPage, animated: true)
+            self.navigationController?.pushViewController(infoPage, animated: true)
         }
     }
 }
@@ -207,11 +256,11 @@ extension MoviesListController : UICollectionViewDelegateFlowLayout {
         return CGSize(width: screenWidth!, height: screenHeight);
     }
     func collectionView(_ collectionView: UICollectionView,  layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 8
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -227,17 +276,8 @@ extension MoviesListController :UIScrollViewDelegate {
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset;
         if distanceFromBottom < height {
             if !loading{
-                topMovies();
+                nowPlaying();
             }
         }
-    }
-}
-extension MoviesListController :UISearchBarDelegate{
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        
-    }
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
     }
 }

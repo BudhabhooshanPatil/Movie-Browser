@@ -32,16 +32,18 @@ class PosterCell: UITableViewCell {
         self.title.translatesAutoresizingMaskIntoConstraints = false;
         self.releasedDate.translatesAutoresizingMaskIntoConstraints = false;
         
+        let view = ["title":self.title,"releasedDate":releasedDate,"poster":self.poster];
         
-        let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[poster]-|", options: [], metrics: nil, views: ["poster":self.poster]);
-        let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[poster]-|", options: [], metrics: nil, views: ["poster":self.poster]);
+        
+        let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[poster]-|", options: [], metrics: nil, views:view );
+        let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[poster]-|", options: [], metrics: nil, views: view);
+        
         self.contentView.addConstraints(horizontal);
         self.contentView.addConstraints(vertical);
         
-        let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[title]-|", options: [], metrics: nil, views: ["title":self.title,"releasedDate":releasedDate]);
-        let horizontal2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[releasedDate]-|", options: [], metrics: nil, views: ["title":self.title,"releasedDate":releasedDate]);
-        
-        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:[title]-[releasedDate]-|", options: [], metrics: nil, views: ["title":self.title,"releasedDate":releasedDate]);
+        let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[title]-|", options: [], metrics: nil, views:view );
+        let horizontal2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[releasedDate]-|", options: [], metrics: nil, views: view);
+        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:[title]-[releasedDate]-|", options: [], metrics: nil, views: view);
         
         self.poster.addConstraints(horizontal1);
         self.poster.addConstraints(horizontal2);
@@ -59,7 +61,7 @@ class PosterCell: UITableViewCell {
         self.title.text = movie.originalTitle;
         self.releasedDate.text = date(releaseDate: movie.releaseDate);
         
-        downloadImage(url: URL(string: MoviesListController.imageBasePath + movie.posterPath)!) { (_image) in
+        downloadImage(url: URL(string: imageBasePath + movie.posterPath)!) { (_image) in
             
             DispatchQueue.main.async {
                 if (self.tag == indexPath.row) {
@@ -84,7 +86,7 @@ class PosterCell: UITableViewCell {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
-        label.font = UIFont.systemFont(ofSize: 30.0, weight: .semibold);
+        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 30.0);
         label.translatesAutoresizingMaskIntoConstraints = false;
         label.textColor = .white;
         label.textAlignment = .left
@@ -95,7 +97,7 @@ class PosterCell: UITableViewCell {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
-        label.font = UIFont.systemFont(ofSize: 30.0, weight: .semibold);
+        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 30.0);
         label.translatesAutoresizingMaskIntoConstraints = false;
         label.textAlignment = .left;
         label.textColor = .white;

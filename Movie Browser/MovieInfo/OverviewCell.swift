@@ -26,16 +26,15 @@ class OverviewCell: UITableViewCell {
         self.contentView.addSubview(self.holderView);
         self.holderView.addSubview(self.overview);
         
-        self.holderView.translatesAutoresizingMaskIntoConstraints = false;
-        self.overview.translatesAutoresizingMaskIntoConstraints = false;
+        let view = ["holderView":self.holderView,"overview":overview];
         
-        let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[holderView]-|", options: [], metrics: nil, views: ["holderView":self.holderView]);
-        let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|[holderView]|", options: [], metrics: nil, views: ["holderView":self.holderView]);
+        let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[holderView]-|", options: [], metrics: nil, views: view);
+        let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|[holderView]|", options: [], metrics: nil, views: view);
         self.contentView.addConstraints(horizontal);
         self.contentView.addConstraints(vertical);
         
-        let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[overview]-|", options: [], metrics: nil, views: ["overview":overview]);
-        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[overview]", options: [], metrics: nil, views: ["overview":overview]);
+        let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[overview]-|", options: [], metrics: nil, views: view);
+        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[overview]", options: [], metrics: nil, views: view);
         
         self.holderView.addConstraints(horizontal1);
         self.holderView.addConstraints(vertical1);
@@ -56,10 +55,10 @@ class OverviewCell: UITableViewCell {
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
         label.font = UIFont(name: "HelveticaNeue-Medium", size: 20.0);
-        label.translatesAutoresizingMaskIntoConstraints = false;
         label.numberOfLines = 0;
         label.textColor = .black;
         label.sizeToFit();
+        label.translatesAutoresizingMaskIntoConstraints = false;
         return label;
     }()
     
@@ -67,6 +66,7 @@ class OverviewCell: UITableViewCell {
         
         let view = UIView();
         view.layer.cornerRadius = 10.0;
+        view.translatesAutoresizingMaskIntoConstraints = false;
         return view;
     }()
 }

@@ -22,19 +22,38 @@ class MoviesCell: UICollectionViewCell {
     
     func viewWillAddSubViews() -> Void {
         
-        self.contentView.addSubview(icon);
-        self.contentView.addSubview(name);
+        self.contentView.addSubview(self.icon);
+        self.contentView.addSubview(self.name);
+        self.icon.addSubview(self.rating);
         
-        let views = ["icon":icon , "name":name];
+        let views = ["icon":self.icon , "name":self.name , "rating":rating];
         
         let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[icon]|", options: [], metrics: nil, views: views);
         let horizontal2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[name]-|", options: [], metrics: nil, views: views);
-        let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[icon]-[name]-|", options: [], metrics: nil, views: views);
+        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[icon]-[name]-|", options: [], metrics: nil, views: views);
         
         self.contentView.addConstraints(horizontal1);
         self.contentView.addConstraints(horizontal2);
-        self.contentView.addConstraints(vertical);
+        self.contentView.addConstraints(vertical1);
+        
+        let horizontal3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[rating]|", options: [], metrics: nil, views: views);
+        let vertical2 = NSLayoutConstraint.constraints(withVisualFormat: "V:[rating]-|", options: [], metrics: nil, views: views);
+        
+        self.icon.addConstraints(horizontal3);
+        self.icon.addConstraints(vertical2);
+        
     }
+    
+    let ratingsDisplay = ["★☆☆☆☆☆☆☆☆☆",
+                          "★★☆☆☆☆☆☆☆☆",
+                          "★★★☆☆☆☆☆☆☆",
+                          "★★★★☆☆☆☆☆☆",
+                          "★★★★★☆☆☆☆☆",
+                          "★★★★★★☆☆☆☆",
+                          "★★★★★★★☆☆☆",
+                          "★★★★★★★★☆☆",
+                          "★★★★★★★★★☆",
+                          "★★★★★★★★★★"];
     
     let icon: UIImageView  = {
         
@@ -51,15 +70,28 @@ class MoviesCell: UICollectionViewCell {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;
-        label.font = UIFont.systemFont(ofSize: 14.0, weight: .semibold);
+        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 14.0);
         label.translatesAutoresizingMaskIntoConstraints = false;
         label.textAlignment = .center
         return label;
     }()
     
+    let rating: UILabel = {
+        
+        let label = UILabel();
+        label.adjustsFontSizeToFitWidth = true;
+        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 14.0);
+        label.translatesAutoresizingMaskIntoConstraints = false;
+        label.textAlignment = .left;
+        label.textColor = .white;
+        return label;
+    }()
+    
     public func bind(movie:Movie , indexPath:IndexPath) -> Void {
         name.text = movie.title;
-        downloadImage(url: URL(string: MoviesListController.imageBasePath + movie.posterPath)!) { (_image) in
+        print(Int(movie.voteAverage));
+        rating.text = ratingsDisplay[Int(movie.voteAverage) - 1] ;
+        downloadImage(url: URL(string: imageBasePath + movie.posterPath)!) { (_image) in
             
             DispatchQueue.main.async {
                 if (self.tag == indexPath.row) {
