@@ -36,7 +36,8 @@ struct Movies: Codable {
         let adult: Bool?
         let overview: String?
         let releaseDate: String?
-        
+        let genres: [Genre]?
+
         enum CodingKeys: String, CodingKey {
             case voteCount = "vote_count"
             case id = "id"
@@ -52,6 +53,17 @@ struct Movies: Codable {
             case adult = "adult"
             case overview = "overview"
             case releaseDate = "release_date"
+            case genres = "genres"
+
+        }
+    }
+    struct Genre: Codable {
+        let id: Int
+        let name: String
+        
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case name = "name"
         }
     }
 }

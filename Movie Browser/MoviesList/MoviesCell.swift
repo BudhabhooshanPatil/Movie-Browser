@@ -24,37 +24,22 @@ class MoviesCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.icon);
         self.contentView.addSubview(self.name);
-        self.icon.addSubview(self.rating);
+        self.contentView.addSubview(self.rating);
         
         let views = ["icon":self.icon , "name":self.name , "rating":rating];
         
         let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[icon]|", options: [], metrics: nil, views: views);
         let horizontal2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[name]-|", options: [], metrics: nil, views: views);
-        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[icon]-[name]-|", options: [], metrics: nil, views: views);
+        let horizontal3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[rating]-|", options: [], metrics: nil, views: views);
+        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[icon]-[name(20)]-[rating(20)]-|", options: [], metrics: nil, views: views);
         
         self.contentView.addConstraints(horizontal1);
         self.contentView.addConstraints(horizontal2);
+        self.contentView.addConstraints(horizontal3);
         self.contentView.addConstraints(vertical1);
         
-        let horizontal3 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[rating]-|", options: [], metrics: nil, views: views);
-        let vertical2 = NSLayoutConstraint.constraints(withVisualFormat: "V:[rating]-|", options: [], metrics: nil, views: views);
-        
-        self.icon.addConstraints(horizontal3);
-        self.icon.addConstraints(vertical2);
-        
     }
-    
-    let ratingsDisplay = ["★☆☆☆☆☆☆☆☆☆",
-                          "★★☆☆☆☆☆☆☆☆",
-                          "★★★☆☆☆☆☆☆☆",
-                          "★★★★☆☆☆☆☆☆",
-                          "★★★★★☆☆☆☆☆",
-                          "★★★★★★☆☆☆☆",
-                          "★★★★★★★☆☆☆",
-                          "★★★★★★★★☆☆",
-                          "★★★★★★★★★☆",
-                          "★★★★★★★★★★"];
-    
+        
     let icon: UIImageView  = {
         
         let imageView = UIImageView(frame: .zero);

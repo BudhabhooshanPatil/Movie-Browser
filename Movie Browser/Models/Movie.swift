@@ -8,6 +8,14 @@
 
 import Foundation
 
+enum MovieType {
+    
+    case topRated
+    case popular
+    case nowPlaying
+    case searching
+}
+
 class Movie: NSObject {
     
     var voteCount: Int = 0
@@ -20,6 +28,8 @@ class Movie: NSObject {
     var originalLanguage: String = ""
     var originalTitle: String = ""
     var genreids: [Int] = []
+    var genres:[String] = [];
+    
     var backdropPath: String = ""
     var adult: Bool = false
     var overview: String = ""
@@ -30,6 +40,9 @@ class Movie: NSObject {
         
         if let _voteCount = _movie.voteCount {
             self.voteCount = _voteCount;
+        }
+        if let id = _movie.id {
+            self.id = id;
         }
         if let video = _movie.video {
             self.video = video;
@@ -66,6 +79,12 @@ class Movie: NSObject {
         }
         if let releaseDate = _movie.releaseDate {
             self.releaseDate = releaseDate;
+        }
+        if let geners = _movie.genres {
+            
+            for item in geners {
+                self.genres.append(item.name);
+            }
         }
     }
 }

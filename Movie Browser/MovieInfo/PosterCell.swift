@@ -26,13 +26,13 @@ class PosterCell: UITableViewCell {
         
         self.contentView.addSubview(self.poster);
         self.poster.addSubview(self.title);
-        self.poster.addSubview(self.releasedDate);
+        self.poster.addSubview(self.genres);
         
         self.poster.translatesAutoresizingMaskIntoConstraints = false;
         self.title.translatesAutoresizingMaskIntoConstraints = false;
-        self.releasedDate.translatesAutoresizingMaskIntoConstraints = false;
+        self.genres.translatesAutoresizingMaskIntoConstraints = false;
         
-        let view = ["title":self.title,"releasedDate":releasedDate,"poster":self.poster];
+        let view = ["title":self.title,"releasedDate":genres,"poster":self.poster];
         
         
         let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[poster]-|", options: [], metrics: nil, views:view );
@@ -59,8 +59,10 @@ class PosterCell: UITableViewCell {
         
         guard let movie = movie else { return  }
         self.title.text = movie.originalTitle;
-        self.releasedDate.text = date(releaseDate: movie.releaseDate);
         
+        if movie.genres.count > 0 {
+            self.genres.text = movie.genres.joined(separator: "/");
+        }
         downloadImage(url: URL(string: imageBasePath + movie.posterPath)!) { (_image) in
             
             DispatchQueue.main.async {
@@ -93,7 +95,7 @@ class PosterCell: UITableViewCell {
         return label;
     }()
     
-    lazy var releasedDate: UILabel = {
+    lazy var genres: UILabel = {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;

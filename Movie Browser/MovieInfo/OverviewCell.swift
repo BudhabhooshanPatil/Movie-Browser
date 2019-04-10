@@ -24,17 +24,17 @@ class OverviewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
         
         self.contentView.addSubview(self.holderView);
-        self.holderView.addSubview(self.overview);
+        self.holderView.addSubview(self.cellText);
         
-        let view = ["holderView":self.holderView,"overview":overview];
+        let view = ["holderView":self.holderView,"cellText":cellText];
         
         let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[holderView]-|", options: [], metrics: nil, views: view);
         let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|[holderView]|", options: [], metrics: nil, views: view);
         self.contentView.addConstraints(horizontal);
         self.contentView.addConstraints(vertical);
         
-        let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[overview]-|", options: [], metrics: nil, views: view);
-        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[overview]", options: [], metrics: nil, views: view);
+        let horizontal1 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[cellText]-|", options: [], metrics: nil, views: view);
+        let vertical1 = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[cellText]", options: [], metrics: nil, views: view);
         
         self.holderView.addConstraints(horizontal1);
         self.holderView.addConstraints(vertical1);
@@ -44,13 +44,14 @@ class OverviewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func bind(movie:Movie?, indexPath:IndexPath) -> Void {
+    func bind(text:String?, indexPath:IndexPath , textColor:UIColor) -> Void {
         
-        guard let movie = movie else { return  }
-        self.overview.text = movie.overview;
+        guard let text = text else { return  }
+        self.cellText.text = text;
+        self.cellText.textColor = textColor;
     }
     
-    lazy var overview: UILabel = {
+    lazy var cellText: UILabel = {
         
         let label = UILabel();
         label.adjustsFontSizeToFitWidth = true;

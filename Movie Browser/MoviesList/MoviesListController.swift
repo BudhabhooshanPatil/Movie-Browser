@@ -16,7 +16,8 @@ class MoviesListController: UIViewController{
     var moviesArray:[Movie] = []
     var loading = false
     var searching = false;
-    
+    var movieType:MovieType = .nowPlaying;
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,7 +28,7 @@ class MoviesListController: UIViewController{
         self.view.addConstraints(horizontal);
         self.view.addConstraints(vertical);
         
-        nowPlaying();
+        nowPlayingMovies();
         viewWillSetUpNaviagtionBar();
     }
     func viewWillSetUpNaviagtionBar() -> Void {
@@ -39,11 +40,11 @@ class MoviesListController: UIViewController{
         self.navigationItem.rightBarButtonItem = orderButton;
     }
     
-    func nowPlaying() -> Void {
+    func nowPlayingMovies() -> Void {
         
         self.navigationItem.title = "Now Playing"
-        
         loading = true;
+        movieType = .nowPlaying;
         
         getNowPlaying(page: currentPage, language: nil, completionHandler: { (data, error) in
             
@@ -69,8 +70,8 @@ class MoviesListController: UIViewController{
     func TopRatedMovies() -> Void {
         
         self.navigationItem.title = "Top Rated"
-        
         loading = true;
+        movieType = .topRated;
         
         getTopMovies(page: Int(currentPage), language: nil, completionHandler: { (data, error) in
             
@@ -78,7 +79,6 @@ class MoviesListController: UIViewController{
                 do{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.currentPage = self.currentPage + 1;
-                    self.moviesArray.removeAll();
                     for _movie in movies_.results{
                         self.moviesArray.append(Movie(_movie: _movie));
                     }
@@ -95,9 +95,9 @@ class MoviesListController: UIViewController{
     }
     func popularMovies() -> Void {
         
-        self.navigationItem.title = "Popular Movies"
-        
+        self.navigationItem.title = "Most Popular"
         loading = true;
+        movieType = .popular;
         
         getPopular(page: Int(currentPage), language: nil) { (data, error) in
             
@@ -105,7 +105,6 @@ class MoviesListController: UIViewController{
                 do{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.currentPage = self.currentPage + 1;
-                    self.moviesArray.removeAll();
                     for _movie in movies_.results{
                         self.moviesArray.append(Movie(_movie: _movie));
                     }
@@ -121,6 +120,8 @@ class MoviesListController: UIViewController{
         }
     }
     func searchMovie(text:String) -> Void {
+        
+        movieType = .searching;
         
         search(language: nil, searchText: text) { (data, error) in
             
@@ -171,14 +172,16 @@ class MoviesListController: UIViewController{
         let alert = UIAlertController(title: "Sort", message: "",preferredStyle: .actionSheet);
         
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil));
-        alert.addAction(UIAlertAction(title: "Most Popular", style: UIAlertAction.Style.default, handler: {(_) in
+        alert.addAction(UIAlertAction(title: "Most Popular Movies", style: UIAlertAction.Style.default, handler: {(_) in
             
             self.currentPage = 1;
+            self.moviesArray.removeAll();
             self.popularMovies();
         }));
-        alert.addAction(UIAlertAction(title: "Highest Rated", style: UIAlertAction.Style.default, handler: {(_) in
+        alert.addAction(UIAlertAction(title: "Top Rated Movies", style: UIAlertAction.Style.default, handler: {(_) in
             
             self.currentPage = 1;
+            self.moviesArray.removeAll();
             self.TopRatedMovies();
         }));
         self.present(alert, animated: true, completion: nil)
@@ -276,7 +279,21 @@ extension MoviesListController :UIScrollViewDelegate {
         let distanceFromBottom = scrollView.contentSize.height - contentYoffset;
         if distanceFromBottom < height {
             if !loading{
-                nowPlaying();
+                
+                switch movieType{
+                    
+                case .topRated:
+                    TopRatedMovies();
+                    break;
+                case .popular:
+                    popularMovies();
+                    break;
+                case .nowPlaying:
+                    nowPlayingMovies();
+                    break;
+                case .searching: break
+                    
+                }
             }
         }
     }

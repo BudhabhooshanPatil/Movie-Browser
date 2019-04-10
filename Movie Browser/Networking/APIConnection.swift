@@ -10,8 +10,21 @@ import Foundation
 import UIKit
 
 public typealias Response = (_ data:Data? ,_ error:Error?) -> Void;
+
 let imageBasePath = "https://image.tmdb.org/t/p/w185_and_h278_bestv2"
+
 let API_KEY = "53eafbc1ab15fcd88324c96a958d6ca5"
+
+let ratingsDisplay = ["★☆☆☆☆☆☆☆☆☆",
+                      "★★☆☆☆☆☆☆☆☆",
+                      "★★★☆☆☆☆☆☆☆",
+                      "★★★★☆☆☆☆☆☆",
+                      "★★★★★☆☆☆☆☆",
+                      "★★★★★★☆☆☆☆",
+                      "★★★★★★★☆☆☆",
+                      "★★★★★★★★☆☆",
+                      "★★★★★★★★★☆",
+                      "★★★★★★★★★★"];
 
 func getTopMovies(page:Int = 1 , language:String? ,completionHandler:@escaping Response) {
     
@@ -48,6 +61,14 @@ func search (page:Int = 1 , language:String?,searchText:String,completionHandler
     };
 }
 
+func findMovie(id:Int , completionHandler:@escaping Response){
+    
+    let api = API(baseUrl: .version3, path: "movie/\(id)?&api_key=\(API_KEY)", httpMethod: .get).buildRequest;
+    
+    httpRequest(request: api) { (data, error) in
+        completionHandler(data,error);
+    };
+}
 
 func downloadImage(url:URL ,onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
     
