@@ -78,20 +78,15 @@
 		E10315E0225B655000A77950 /* Movie Browser */ = {
 			isa = PBXGroup;
 			children = (
+				E16EE9E0225DBCAB00AA53A6 /* Models */,
 				E10315F3225B66FC00A77950 /* Networking */,
 				E10315E1225B655000A77950 /* AppDelegate.swift */,
 				E10315E5225B655000A77950 /* Main.storyboard */,
 				E10315E8225B655600A77950 /* Assets.xcassets */,
 				E10315EA225B655600A77950 /* LaunchScreen.storyboard */,
 				E10315ED225B655600A77950 /* Info.plist */,
-				E10315FE225B80FC00A77950 /* MoviesViewController.swift */,
-				E1031608225C4A2000A77950 /* CollectionViewCell.swift */,
-				E103160E225C77E300A77950 /* Parser.swift */,
-				E1031610225C7B4B00A77950 /* Movie.swift */,
-				E1031612225C7FBE00A77950 /* APIConnection.swift */,
-				E16EE9D8225D95AC00AA53A6 /* InfoViewController.swift */,
-				E16EE9DA225D9D0300AA53A6 /* PosterTableViewCell.swift */,
-				E16EE9DC225DB36800AA53A6 /* OverviewTableViewCell.swift */,
+				E16EE9DF225DBC8F00AA53A6 /* MoviesList */,
+				E16EE9DE225DBC7400AA53A6 /* MovieInfo */,
 			);
 			path = "Movie Browser";
 			sourceTree = "<group>";
@@ -99,6 +94,7 @@
 		E10315F3225B66FC00A77950 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				E1031612225C7FBE00A77950 /* APIConnection.swift */,
 				E10315F4225B66FC00A77950 /* HTTPMethod.swift */,
 				E10315F5225B66FC00A77950 /* HTTPRequest.swift */,
 				E10315F7225B66FC00A77950 /* NetworkLogger.swift */,
@@ -106,6 +102,34 @@
 				E103160C225C59DD00A77950 /* EndPointType.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		E16EE9DE225DBC7400AA53A6 /* MovieInfo */ = {
+			isa = PBXGroup;
+			children = (
+				E16EE9D8225D95AC00AA53A6 /* InfoViewController.swift */,
+				E16EE9DA225D9D0300AA53A6 /* PosterTableViewCell.swift */,
+				E16EE9DC225DB36800AA53A6 /* OverviewTableViewCell.swift */,
+			);
+			path = MovieInfo;
+			sourceTree = "<group>";
+		};
+		E16EE9DF225DBC8F00AA53A6 /* MoviesList */ = {
+			isa = PBXGroup;
+			children = (
+				E10315FE225B80FC00A77950 /* MoviesViewController.swift */,
+				E1031608225C4A2000A77950 /* CollectionViewCell.swift */,
+			);
+			path = MoviesList;
+			sourceTree = "<group>";
+		};
+		E16EE9E0225DBCAB00AA53A6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E103160E225C77E300A77950 /* Parser.swift */,
+				E1031610225C7B4B00A77950 /* Movie.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
