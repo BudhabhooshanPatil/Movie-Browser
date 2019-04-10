@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public typealias Response = (_ data:Data? ,_ error:Error?) -> Void;
 
@@ -33,4 +34,17 @@ func search (page:Int = 1 , language:String?,searchText:String,completionHandler
     httpRequest(request: api) { (data, error) in
         completionHandler(data,error);
     };
+}
+func downloadImage(url:URL ,onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
+    
+    URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+        
+        if error != nil {
+            return
+        }
+        if let imageData = data {
+            onImage(UIImage(data: imageData));
+        }
+        
+    }).resume()
 }

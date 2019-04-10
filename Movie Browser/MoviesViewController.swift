@@ -35,14 +35,10 @@ class MoviesViewController: UIViewController{
         viewWillSetUpNaviagtionBar();
     }
     func viewWillSetUpNaviagtionBar() -> Void {
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.searchController = self.searchController;
-        
-    }
-    @objc func sort() -> Void {
-        
-    }
-    @objc func order() -> Void {
-        
+        self.navigationItem.title = "Top Rated";
     }
     func topMovies() -> Void {
         
@@ -121,6 +117,8 @@ class MoviesViewController: UIViewController{
         searchcontroller.searchResultsUpdater = self;
         searchcontroller.obscuresBackgroundDuringPresentation = false;
         searchcontroller.searchBar.placeholder = "Search Movies";
+        searchcontroller.searchBar.scopeButtonTitles = ["In Theaters", "Popular", "Top"]
+        searchcontroller.searchBar.delegate = self;
         navigationItem.searchController = searchcontroller;
         definesPresentationContext = true;
         return searchcontroller;
@@ -160,7 +158,6 @@ extension MoviesViewController :UICollectionViewDataSource{
             cell.tag = indexPath.row;
             cell.bind(movie: moviesArray[indexPath.row], indexPath: indexPath);
             cell.layer.cornerRadius = 10
-            
             // shadow
             cell.layer.shadowColor = UIColor.black.cgColor
             cell.layer.shadowOffset = CGSize(width: 3, height: 3)
@@ -175,6 +172,10 @@ extension MoviesViewController :UICollectionViewDataSource{
 extension MoviesViewController :UICollectionViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let infoPage = InfoViewController()
+        infoPage.detailsofMovie = self.moviesArray[indexPath .row];
+        self.navigationController?.pushViewController(infoPage, animated: true)
         
     }
 }
@@ -213,5 +214,14 @@ extension MoviesViewController :UIScrollViewDelegate {
                 topMovies();
             }
         }
+    }
+}
+extension MoviesViewController :UISearchBarDelegate{
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
     }
 }

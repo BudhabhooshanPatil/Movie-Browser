@@ -68,17 +68,4 @@ class CollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    func downloadImage(url:URL ,onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
-        
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-            
-            if error != nil {
-                return
-            }
-            if let imageData = data {
-                onImage(UIImage(data: imageData));
-            }
-            
-        }).resume()
-    }
 }
