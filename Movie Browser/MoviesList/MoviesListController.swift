@@ -12,7 +12,10 @@ class MoviesListController: UIViewController{
     
     var currentPage = 1;
     var totalPages:Int = 0;
-    var loadingMoreView:InfiniteScrollActivityView?
+    var loadingMoreView:ActivityIndicatorView?
+    var collectionViewBackground:ActivityIndicatorView?
+    
+    let numberOfCellsPerRow = 2
 
     
     let decoder = JSONDecoder()
@@ -40,6 +43,7 @@ class MoviesListController: UIViewController{
     }
     
     
+    /// set up naviagtion bar
     func viewWillSetUpNaviagtionBar() -> Void {
         
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -49,6 +53,8 @@ class MoviesListController: UIViewController{
         self.navigationItem.rightBarButtonItem = orderButton;
     }
     
+    
+    /// load movies in theater
     func nowPlayingMovies() -> Void {
         
         self.navigationItem.title = "Now Playing"
@@ -68,6 +74,8 @@ class MoviesListController: UIViewController{
                         self.collectionView.reloadData();
                         self.loading = false;
                         self.loadingMoreView?.stopAnimating();
+                        self.collectionViewBackground?.stopAnimating();
+                        self.collectionViewBackground?.removeFromSuperview();
                     }
                 }catch{
                     self.loading = false;
@@ -210,6 +218,7 @@ class MoviesListController: UIViewController{
         searchcontroller.searchBar.placeholder = "Search Movies";
         navigationItem.searchController = searchcontroller;
         definesPresentationContext = true;
+        
         return searchcontroller;
     }()
     lazy var collectionView: UICollectionView = {
@@ -223,14 +232,20 @@ class MoviesListController: UIViewController{
         collectionview.register(MoviesCell.self, forCellWithReuseIdentifier: "Cell");
         
         // Set up Infinite Scroll loading indicator
-        let frame = CGRect(x: 0, y: collectionview.contentSize.height, width: collectionview.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
-        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        let frame = CGRect(x: 0, y: collectionview.contentSize.height, width: collectionview.bounds.size.width, height: ActivityIndicatorView.defaultHeight)
+        loadingMoreView = ActivityIndicatorView(frame: frame)
         loadingMoreView!.isHidden = true
         collectionview.addSubview(loadingMoreView!)
         
         var insets = collectionview.contentInset
-        insets.bottom += InfiniteScrollActivityView.defaultHeight
+        insets.bottom += ActivityIndicatorView.defaultHeight
         collectionview.contentInset = insets
+        
+        collectionViewBackground = ActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 60, height: 60));
+        collectionViewBackground?.startAnimating();
+        collectionViewBackground?.center = self.view.center;
+        collectionview.backgroundView = collectionViewBackground;
+        
         return collectionview;
     }()
     
@@ -345,7 +360,7 @@ extension MoviesListController :UIScrollViewDelegate {
         if(scrollView.contentOffset.y > scrollOffsetThreshold && self.collectionView.isDragging) {
             if !loading{
                 
-                let frame = CGRect(x: 0, y: self.collectionView.contentSize.height, width: self.collectionView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                let frame = CGRect(x: 0, y: self.collectionView.contentSize.height, width: self.collectionView.bounds.size.width, height: ActivityIndicatorView.defaultHeight)
                 loadingMoreView?.frame = frame
                 loadingMoreView!.startAnimating()
                 
