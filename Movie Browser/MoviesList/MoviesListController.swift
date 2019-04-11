@@ -15,7 +15,7 @@ class MoviesListController: UIViewController{
     var loadingMoreView:ActivityIndicatorView?
     var collectionViewBackground:ActivityIndicatorView?
     
-    let numberOfCellsPerRow = 2
+    var numberOfCellsPerRow = 2
 
     
     let decoder = JSONDecoder()
@@ -41,7 +41,13 @@ class MoviesListController: UIViewController{
         nowPlayingMovies();
         viewWillSetUpNaviagtionBar();
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated);
+        
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            numberOfCellsPerRow = 3;
+        }
+    }
     
     /// set up naviagtion bar
     func viewWillSetUpNaviagtionBar() -> Void {
@@ -49,7 +55,7 @@ class MoviesListController: UIViewController{
         navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.searchController = self.searchController;
         
-        let orderButton = UIBarButtonItem(image: UIImage(named: "order"), style: .plain,target: self, action: #selector(showSimpleAlert));
+        let orderButton = UIBarButtonItem(image: UIImage(named: "order"), style: .plain,target: self, action: #selector(showSimpleAlert(sender:)));
         self.navigationItem.rightBarButtonItem = orderButton;
     }
     
@@ -249,7 +255,7 @@ class MoviesListController: UIViewController{
         return collectionview;
     }()
     
-    @objc func showSimpleAlert() {
+    @objc func showSimpleAlert(sender: UIBarButtonItem)  {
         
         let alert = UIAlertController(title: "Sort", message: "",preferredStyle: .actionSheet);
         
@@ -268,6 +274,12 @@ class MoviesListController: UIViewController{
             self.scrollToTop = true;
             self.TopRatedMovies();
         }));
+        
+        if let presenter = alert.popoverPresentationController {
+            presenter.barButtonItem = sender;
+            
+        }
+        
         self.present(alert, animated: true, completion: nil)
     }
 }
@@ -326,16 +338,10 @@ extension MoviesListController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let screenRect = UIScreen.main.bounds;
-        var screenWidth:CGFloat? = nil;
-        if (UIDevice.current.userInterfaceIdiom == .pad) {
-            screenWidth = (screenRect.size.width / 3) - 16
-        }else{
-            screenWidth = (screenRect.size.width/2) - 8.0;
-        }
-        let screenHeight = screenWidth!*2 - 16.0;
+        let totalwidth = collectionView.bounds.size.width;
+        let dimensions = CGFloat(Int(totalwidth) / numberOfCellsPerRow)
         
-        return CGSize(width: screenWidth!, height: screenHeight);
+        return CGSize(width: dimensions - 8.0, height: dimensions*2 - 16.0);
     }
     func collectionView(_ collectionView: UICollectionView,  layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
