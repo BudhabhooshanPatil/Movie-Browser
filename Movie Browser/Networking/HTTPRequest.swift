@@ -8,21 +8,21 @@
 
 import Foundation
 
-enum ResultType {
+enum ResultType<T> {
     case success
-    case failure
+    case failure(T)
 }
 
-private func handleRsponse (_ response:HTTPURLResponse ,serverdata:Data) -> ResultType {
+private func handleRsponse (_ response:HTTPURLResponse ,serverdata:Data) -> ResultType<TMDBException> {
     
     switch response.statusCode {
     case 200...299:
         return .success
     default:
-        return .failure;
+        return .failure(serverdata.exception);
     }
 }
-internal typealias NetworkRouterCompletion = (_ data:Data? ,_ error:Error?)->();
+internal typealias NetworkRouterCompletion = (_ data:Data? ,_ error:TMDBException?)->();
 
 internal func httpRequest(request : URLRequest, completionHandler: @escaping NetworkRouterCompletion) {
     
@@ -33,7 +33,6 @@ internal func httpRequest(request : URLRequest, completionHandler: @escaping Net
         Logger.log(request: request);
         
         guard error == nil else {
-            completionHandler(nil,error);
             return
         }
         guard let content = data else {
@@ -49,8 +48,8 @@ internal func httpRequest(request : URLRequest, completionHandler: @escaping Net
             case .success:
                 completionHandler(data,nil);
                 break;
-            case .failure:
-                completionHandler(nil ,nil);
+            case .failure(let networkFailureError):
+                completionHandler(nil ,networkFailureError);
                 break;
             }
         }

@@ -41,10 +41,10 @@ class MoviesCell: UICollectionViewCell {
         
         let horizontal4 = NSLayoutConstraint.constraints(withVisualFormat: "H:|[icon]|", options: [], metrics: nil, views: views);
         let vertical2 = NSLayoutConstraint.constraints(withVisualFormat: "V:|[icon]|", options: [], metrics: nil, views: views);
-
+        
         self.holderView.addConstraints(horizontal4);
         self.holderView.addConstraints(vertical2);
-
+        
     }
     
     lazy var holderView: UIView = {
@@ -91,10 +91,10 @@ class MoviesCell: UICollectionViewCell {
         return label;
     }()
     
-    public func bind(movie:Movie , indexPath:IndexPath) -> Void {
+    func bind(movie:Movie , indexPath:IndexPath) -> Void {
         
         name.text = movie.title;
-       
+        
         print(Int(movie.voteAverage));
         
         if Int(movie.voteAverage)-1 > 0 {
@@ -107,7 +107,7 @@ class MoviesCell: UICollectionViewCell {
             DispatchQueue.main.async {
                 
                 if (self.tag == indexPath.row) {
-                   
+                    
                     self.icon.image = _image;
                 }
             }

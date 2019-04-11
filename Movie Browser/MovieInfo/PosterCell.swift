@@ -10,6 +10,8 @@ import UIKit
 
 class PosterCell: UITableViewCell {
     
+    var blur:UIVisualEffectView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -106,22 +108,4 @@ class PosterCell: UITableViewCell {
         label.textColor = .white;
         return label;
     }()
-    
-    func date(releaseDate:String) -> String {
-        
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd"
-        
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "MMM dd,yyyy"
-        
-        if let date = dateFormatterGet.date(from: releaseDate) {
-            print(dateFormatterPrint.string(from: date))
-            return dateFormatterPrint.string(from: date)
-        } else {
-            print("There was an error decoding the string")
-        }
-        
-        return releaseDate;
-    }
 }

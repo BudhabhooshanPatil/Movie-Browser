@@ -16,11 +16,11 @@ internal protocol EndPointType {
 }
 internal struct API:EndPointType {
     
-    public var baseURL: Host
+    public var baseURL: Host;
     
-    public var path: String
+    public var path: String;
     
-    public var httpMethod: HTTPMethod
+    public var httpMethod: HTTPMethod;
     
     
     init(baseUrl:Host ,path:String , httpMethod:HTTPMethod) {
@@ -44,9 +44,9 @@ internal struct API:EndPointType {
         
         var request = URLRequest(url: URL(string: url)!,
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                 timeoutInterval: 60.0)
+                                 timeoutInterval: 60.0);
         
-        request.httpMethod = self.httpMethod.rawValue
+        request.httpMethod = self.httpMethod.rawValue;
         
         return request;
     }

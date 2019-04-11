@@ -77,7 +77,7 @@ extension MovieInfoController :UITableViewDelegate {
         
         switch indexPath.section {
         case 0:
-            return self.view.frame.size.width;
+            return 450.0;
         case 1:
             return detailsofMovie.overview.height(withConstrainedWidth: self.view.frame.size.width, font: UIFont(name: "HelveticaNeue-Medium", size: 22)!);
         case 2:
@@ -154,7 +154,7 @@ extension MovieInfoController :UITableViewDataSource{
             break;
         case 3:
             if let cell = tableView.dequeueReusableCell(withIdentifier: "OverviewTableViewCell", for: indexPath) as? OverviewCell{
-                cell.bind(text: PosterCell().date(releaseDate: detailsofMovie.releaseDate), indexPath: indexPath, textColor: .black);
+                cell.bind(text: Helper.date(releaseDate: detailsofMovie.releaseDate), indexPath: indexPath, textColor: .black);
                 return cell;
             }
             break;
@@ -164,12 +164,4 @@ extension MovieInfoController :UITableViewDataSource{
         return UITableViewCell();
     }
 }
-extension String {
-    
-    func height(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
-        
-        return ceil(boundingBox.height) + 32.0
-    }
-}
+

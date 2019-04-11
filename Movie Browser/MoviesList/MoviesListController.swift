@@ -10,40 +10,52 @@ import UIKit
 
 class MoviesListController: UIViewController{
     
+    /****/
     var currentPage = 1;
     var totalPages:Int = 0;
     var loadingMoreView:ActivityIndicatorView?
     var collectionViewBackground:ActivityIndicatorView?
-    
     var numberOfCellsPerRow = 2
-
-    
     let decoder = JSONDecoder()
     var moviesArray:[Movie] = []
     var loading = false
     var searching = false;
     var scrollToTop = false;
-    
     var movieType:MovieType = .nowPlaying;
     var searchText:String? = nil;
+    /********/
     
-        
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // add UICollectionView to UIView
         self.view.addSubview(self.collectionView);
+        
+        // remove autoLayout constraints
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|[collectionView]|", options: [], metrics: nil, views: ["collectionView":collectionView]);
-        let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|[collectionView]|", options: [], metrics: nil, views: ["collectionView":collectionView]);
+        
+        // horizontal constraints for UICollectionView
+        let horizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|[collectionView]|",
+                                                        options: [],
+                                                        metrics: nil,
+                                                        views: ["collectionView":collectionView]);
+        let vertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|[collectionView]|",
+                                                      options: [],
+                                                      metrics: nil,
+                                                      views: ["collectionView":collectionView]);
         self.view.addConstraints(horizontal);
         self.view.addConstraints(vertical);
         
+        // load movies in theater for first lauch
         nowPlayingMovies();
+        
+        // set up naviagtion bar
         viewWillSetUpNaviagtionBar();
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
         
+        // check if device is iPad or Iphone
         if (UIDevice.current.userInterfaceIdiom == .pad) {
             numberOfCellsPerRow = 3;
         }
@@ -55,6 +67,7 @@ class MoviesListController: UIViewController{
         navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.searchController = self.searchController;
         
+        // add sort bar button
         let orderButton = UIBarButtonItem(image: UIImage(named: "order"), style: .plain,target: self, action: #selector(showSimpleAlert(sender:)));
         self.navigationItem.rightBarButtonItem = orderButton;
     }
@@ -88,10 +101,12 @@ class MoviesListController: UIViewController{
                     self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
+            }else{
+                Logger.print(items: error?.statusMessage);
             }
         });
     }
-    
+    /// load top rated movies
     func TopRatedMovies() -> Void {
         
         self.navigationItem.title = "Top Rated"
@@ -122,9 +137,13 @@ class MoviesListController: UIViewController{
                     self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
+            }else{
+                Logger.print(items: error?.statusMessage);
             }
         });
     }
+    
+    /// load popular movies
     func popularMovies() -> Void {
         
         self.navigationItem.title = "Most Popular"
@@ -155,9 +174,13 @@ class MoviesListController: UIViewController{
                     self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
+            }else{
+                Logger.print(items: error?.statusMessage);
             }
         }
     }
+    
+    /// search movie
     func searchMovie(text:String) -> Void {
         
         movieType = .searching;
@@ -184,9 +207,12 @@ class MoviesListController: UIViewController{
                     self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
+            }else{
+                Logger.print(items: error?.statusMessage);
             }
         }
     }
+    /// scrolling while searching
     func searchScrolling(text:String) -> Void {
         
         movieType = .searching;
@@ -211,10 +237,14 @@ class MoviesListController: UIViewController{
                     self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
+            }else{
+                Logger.print(items: error?.statusMessage);
             }
         }
     }
     
+    
+    /// search controller
     lazy var searchController: UISearchController =  {
         
         // setup the search controller
@@ -227,6 +257,9 @@ class MoviesListController: UIViewController{
         
         return searchcontroller;
     }()
+    
+    
+    /// UICollectionView
     lazy var collectionView: UICollectionView = {
         
         // setup the collection view
@@ -255,11 +288,23 @@ class MoviesListController: UIViewController{
         return collectionview;
     }()
     
+    
+    /// Alert Controller
+    ///
+    /// - Parameter sender: bar button
     @objc func showSimpleAlert(sender: UIBarButtonItem)  {
         
         let alert = UIAlertController(title: "Sort", message: "",preferredStyle: .actionSheet);
         
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil));
+        alert.addAction(UIAlertAction(title: "Now Playing", style: UIAlertAction.Style.default, handler: {(_) in
+            
+            self.currentPage = 1;
+            self.moviesArray.removeAll();
+            self.scrollToTop = true;
+            self.nowPlayingMovies();
+        }));
+        
         alert.addAction(UIAlertAction(title: "Most Popular Movies", style: UIAlertAction.Style.default, handler: {(_) in
             
             self.currentPage = 1;
