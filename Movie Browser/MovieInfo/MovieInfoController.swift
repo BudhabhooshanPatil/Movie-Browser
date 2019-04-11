@@ -33,7 +33,7 @@ class MovieInfoController: UIViewController {
         self.view.addConstraints(horizontal);
         self.view.addConstraints(vertical);
         
-        findMovie(id: detailsofMovie.id) { (data, error) in
+        ApiConnections.findMovie(id: detailsofMovie.id) { (data, error) in
             
             if let data = data{
                 do{
@@ -63,6 +63,7 @@ class MovieInfoController: UIViewController {
     
     func headerView(text:String) -> UIView {
         let view = UIView(frame: CGRect(x: 20, y: 0, width: self.view.frame.size.width, height: 44));
+        view.backgroundColor = .white;
         let label = UILabel(frame: view.frame);
         label.text = text;
         label.font = UIFont.boldSystemFont(ofSize: 25);
@@ -107,7 +108,7 @@ extension MovieInfoController :UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch section {
         case 1:
-            return headerView(text: "Overview");
+            return headerView(text: "Synopsis");
         case 2:
             return headerView(text: "User Rating");
         case 3:
@@ -147,7 +148,7 @@ extension MovieInfoController :UITableViewDataSource{
         case 2:
             if let cell = tableView.dequeueReusableCell(withIdentifier: "OverviewTableViewCell", for: indexPath) as? OverviewCell{
                 let _vote = Int(detailsofMovie.voteAverage);
-                cell.bind(text: ratingsDisplay[_vote], indexPath: indexPath, textColor: UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1));
+                cell.bind(text: AppConstants.ratingsDisplay[_vote], indexPath: indexPath, textColor: UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1));
                 return cell;
             }
             break;

@@ -63,7 +63,7 @@ class PosterCell: UITableViewCell {
         if movie.genres.count > 0 {
             self.genres.text = movie.genres.joined(separator: "/");
         }
-        downloadImage(url: URL(string: imageBasePath + movie.posterPath)!) { (_image) in
+        ApiConnections.downloadImage(url: URL(string: AppConstants.imageBasePath + movie.posterPath)!) { (_image) in
             
             DispatchQueue.main.async {
                 if (self.tag == indexPath.row) {

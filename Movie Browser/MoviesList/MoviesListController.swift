@@ -46,7 +46,7 @@ class MoviesListController: UIViewController{
         loading = true;
         movieType = .nowPlaying;
         
-        getNowPlaying(page: currentPage, language: nil, completionHandler: { (data, error) in
+        ApiConnections.getNowPlaying(page: currentPage, language: nil, completionHandler: { (data, error) in
             
             if let data = data{
                 do{
@@ -73,7 +73,7 @@ class MoviesListController: UIViewController{
         loading = true;
         movieType = .topRated;
         
-        getTopMovies(page: Int(currentPage), language: nil, completionHandler: { (data, error) in
+        ApiConnections.getTopMovies(page: Int(currentPage), language: nil, completionHandler: { (data, error) in
             
             if let data = data{
                 do{
@@ -99,7 +99,7 @@ class MoviesListController: UIViewController{
         loading = true;
         movieType = .popular;
         
-        getPopular(page: Int(currentPage), language: nil) { (data, error) in
+        ApiConnections.getPopular(page: Int(currentPage), language: nil) { (data, error) in
             
             if let data = data{
                 do{
@@ -123,7 +123,7 @@ class MoviesListController: UIViewController{
         
         movieType = .searching;
         
-        search(language: nil, searchText: text) { (data, error) in
+        ApiConnections.search(language: nil, searchText: text) { (data, error) in
             
             if let data = data{
                 do{
@@ -209,12 +209,6 @@ extension MoviesListController :UICollectionViewDataSource{
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? MoviesCell {
             cell.tag = indexPath.row;
             cell.bind(movie: moviesArray[indexPath.row], indexPath: indexPath);
-            cell.layer.cornerRadius = 10
-            // shadow
-            cell.layer.shadowColor = UIColor.black.cgColor
-            cell.layer.shadowOffset = CGSize(width: 3, height: 3)
-            cell.layer.shadowOpacity = 0.7
-            cell.layer.shadowRadius = 4.0
             return cell;
         }
         
@@ -252,7 +246,7 @@ extension MoviesListController : UICollectionViewDelegateFlowLayout {
         if (UIDevice.current.userInterfaceIdiom == .pad) {
             screenWidth = (screenRect.size.width / 3) - 16
         }else{
-            screenWidth = (screenRect.size.width/2) - 16.0;
+            screenWidth = (screenRect.size.width/2) - 8.0;
         }
         let screenHeight = screenWidth!*2 - 16.0;
         
