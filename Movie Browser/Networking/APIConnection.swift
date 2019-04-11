@@ -58,19 +58,11 @@ class ApiConnections {
     
     class func downloadMoviePoster(imagepathType:imagebasePath,posterPath:String,onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
         
-        var url = AppConstants.imageBase;
-        switch imagepathType {
-            
-        case .w185:
-            url = url + "w185"+"/\(posterPath)"
-            break;
-        case .w300:
-            url = url + "w300"+"/\(posterPath)"
-            break
-        }
+        let url = AppConstants.imageBase + imagepathType.value + "\(posterPath)";
+        
         if let imageURL = URL(string: url) {
             
-            URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
+            let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
                 
                 if error != nil {
                     return
@@ -79,8 +71,8 @@ class ApiConnections {
                     onImage(UIImage(data: imageData));
                 }
                 
-            }).resume()
-            
+            });
+            task.resume();
         }
     }
 }

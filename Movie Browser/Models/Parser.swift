@@ -15,10 +15,10 @@ struct Movies: Codable {
     let results: [Result]
     
     enum CodingKeys: String, CodingKey {
-        case page = "page"
+        case page =         "page"
         case totalResults = "total_results"
-        case totalPages = "total_pages"
-        case results = "results"
+        case totalPages =   "total_pages"
+        case results =      "results"
     }
     
     struct Result: Codable {
@@ -37,24 +37,24 @@ struct Movies: Codable {
         let overview: String?
         let releaseDate: String?
         let genres: [Genre]?
-
+        
         enum CodingKeys: String, CodingKey {
-            case voteCount = "vote_count"
-            case id = "id"
-            case video = "video"
-            case voteAverage = "vote_average"
-            case title = "title"
-            case popularity = "popularity"
-            case posterPath = "poster_path"
+            case voteCount =        "vote_count"
+            case id =               "id"
+            case video =            "video"
+            case voteAverage =      "vote_average"
+            case title =            "title"
+            case popularity =       "popularity"
+            case posterPath =       "poster_path"
             case originalLanguage = "original_language"
-            case originalTitle = "original_title"
-            case genreids = "genre_ids"
-            case backdropPath = "backdrop_path"
-            case adult = "adult"
-            case overview = "overview"
-            case releaseDate = "release_date"
-            case genres = "genres"
-
+            case originalTitle =    "original_title"
+            case genreids =         "genre_ids"
+            case backdropPath =     "backdrop_path"
+            case adult =            "adult"
+            case overview =         "overview"
+            case releaseDate =      "release_date"
+            case genres =           "genres"
+            
         }
     }
     struct Genre: Codable {
@@ -62,7 +62,7 @@ struct Movies: Codable {
         let name: String
         
         enum CodingKeys: String, CodingKey {
-            case id = "id"
+            case id =   "id"
             case name = "name"
         }
     }
@@ -73,8 +73,8 @@ struct TMDBError: Codable {
     let statusMessage: String
     
     enum CodingKeys: String, CodingKey {
-        case statusCode = "status_code"
-        case statusMessage = "status_message"
+        case statusCode =       "status_code"
+        case statusMessage =    "status_message"
     }
 }
 

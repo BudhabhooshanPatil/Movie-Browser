@@ -18,6 +18,18 @@ internal enum imagebasePath{
     
     case w185
     case w300
+    
+    var value:String {
+        
+        switch self {
+            
+        case .w185:
+            return "w185";
+        case .w300:
+            return "w300";
+        }
+    }
+    
 }
 
 internal enum Routes{

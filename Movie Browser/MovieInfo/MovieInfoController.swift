@@ -38,7 +38,7 @@ class MovieInfoController: UIViewController {
             if let data = data{
                 do{
                     let movie_ = try self.decoder.decode(Movies.Result.self, from: data);
-                    self.detailsofMovie = Movie(_movie: movie_);
+                    self.detailsofMovie = Movie(model: movie_);
                     DispatchQueue.main.async {
                         let indexPath = IndexPath(row: 0, section: 0);
                         self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.top);

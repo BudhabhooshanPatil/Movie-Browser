@@ -87,7 +87,7 @@ class MoviesListController: UIViewController{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.currentPage = self.currentPage + 1;
                     for _movie in movies_.results{
-                        self.moviesArray.append(Movie(_movie: _movie));
+                        self.moviesArray.append(Movie(model: _movie));
                     }
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
@@ -102,7 +102,9 @@ class MoviesListController: UIViewController{
                     Logger.print(items: error.localizedDescription);
                 }
             }else{
-                Logger.print(items: error?.statusMessage);
+                if let error = error {
+                    Logger.print(items: error.statusMessage);
+                }
             }
         });
     }
@@ -120,7 +122,7 @@ class MoviesListController: UIViewController{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.currentPage = self.currentPage + 1;
                     for _movie in movies_.results{
-                        self.moviesArray.append(Movie(_movie: _movie));
+                        self.moviesArray.append(Movie(model: _movie));
                     }
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
@@ -138,7 +140,9 @@ class MoviesListController: UIViewController{
                     Logger.print(items: error.localizedDescription);
                 }
             }else{
-                Logger.print(items: error?.statusMessage);
+                if let error = error {
+                    Logger.print(items: error.statusMessage);
+                }
             }
         });
     }
@@ -157,7 +161,7 @@ class MoviesListController: UIViewController{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.currentPage = self.currentPage + 1;
                     for _movie in movies_.results{
-                        self.moviesArray.append(Movie(_movie: _movie));
+                        self.moviesArray.append(Movie(model: _movie));
                     }
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
@@ -175,7 +179,9 @@ class MoviesListController: UIViewController{
                     Logger.print(items: error.localizedDescription);
                 }
             }else{
-                Logger.print(items: error?.statusMessage);
+                if let error = error {
+                    Logger.print(items: error.statusMessage);
+                }
             }
         }
     }
@@ -195,7 +201,7 @@ class MoviesListController: UIViewController{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.moviesArray.removeAll();
                     for _movie in movies_.results{
-                        self.moviesArray.append(Movie(_movie: _movie));
+                        self.moviesArray.append(Movie(model: _movie));
                     }
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
@@ -208,7 +214,9 @@ class MoviesListController: UIViewController{
                     Logger.print(items: error.localizedDescription);
                 }
             }else{
-                Logger.print(items: error?.statusMessage);
+                if let error = error {
+                    Logger.print(items: error.statusMessage);
+                }
             }
         }
     }
@@ -225,7 +233,7 @@ class MoviesListController: UIViewController{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.currentPage = self.currentPage + 1;
                     for _movie in movies_.results{
-                        self.moviesArray.append(Movie(_movie: _movie));
+                        self.moviesArray.append(Movie(model: _movie));
                     }
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
@@ -238,7 +246,9 @@ class MoviesListController: UIViewController{
                     Logger.print(items: error.localizedDescription);
                 }
             }else{
-                Logger.print(items: error?.statusMessage);
+                if let error = error {
+                    Logger.print(items: error.statusMessage);
+                }
             }
         }
     }

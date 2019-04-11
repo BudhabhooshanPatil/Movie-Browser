@@ -35,52 +35,52 @@ class Movie: NSObject {
     var overview: String = ""
     var releaseDate: String = ""
     
-    init(_movie:Movies.Result) {
+    init(model:Movies.Result) {
         super.init();
         
-        if let _voteCount = _movie.voteCount {
+        if let _voteCount = model.voteCount {
             self.voteCount = _voteCount;
         }
-        if let id = _movie.id {
+        if let id = model.id {
             self.id = id;
         }
-        if let video = _movie.video {
+        if let video = model.video {
             self.video = video;
         }
-        if let voteAverage = _movie.voteAverage {
+        if let voteAverage = model.voteAverage {
             self.voteAverage = voteAverage;
         }
-        if let title = _movie.title {
+        if let title = model.title {
             self.title = title;
         }
-        if let popularity = _movie.popularity {
+        if let popularity = model.popularity {
             self.popularity = popularity;
         }
-        if let posterPath = _movie.posterPath {
+        if let posterPath = model.posterPath {
             self.posterPath = posterPath;
         }
-        if let originalLanguage = _movie.originalLanguage {
+        if let originalLanguage = model.originalLanguage {
             self.originalLanguage = originalLanguage;
         }
-        if let originalTitle = _movie.originalTitle {
+        if let originalTitle = model.originalTitle {
             self.originalTitle = originalTitle;
         }
-        if let genreids = _movie.genreids {
+        if let genreids = model.genreids {
             self.genreids = genreids;
         }
-        if let backdropPath = _movie.backdropPath {
+        if let backdropPath = model.backdropPath {
             self.backdropPath = backdropPath;
         }
-        if let adult = _movie.adult {
+        if let adult = model.adult {
             self.adult = adult;
         }
-        if let overview = _movie.overview {
+        if let overview = model.overview {
             self.overview = overview;
         }
-        if let releaseDate = _movie.releaseDate {
+        if let releaseDate = model.releaseDate {
             self.releaseDate = releaseDate;
         }
-        if let geners = _movie.genres {
+        if let geners = model.genres {
             
             for item in geners {
                 self.genres.append(item.name);
