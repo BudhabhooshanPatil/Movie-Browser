@@ -14,7 +14,7 @@ class AppConstants:NSObject {
     
     public static let imageBase = "https://image.tmdb.org/t/p/"
     
-    public static let  API_KEY = "53eafbc1ab15fcd88324c96a958d6ca5"
+    public static let API_KEY = "53eafbc1ab15fcd88324c96a958d6ca5"
     
     public static let ratingsDisplay = ["★☆☆☆☆☆☆☆☆☆",
                                         "★★☆☆☆☆☆☆☆☆",
