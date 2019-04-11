@@ -12,7 +12,8 @@ class MoviesListController: UIViewController{
     
     var currentPage = 1;
     var totalPages:Int = 0;
-    
+    var loadingMoreView:InfiniteScrollActivityView?
+
     
     let decoder = JSONDecoder()
     var moviesArray:[Movie] = []
@@ -66,9 +67,11 @@ class MoviesListController: UIViewController{
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
                         self.loading = false;
+                        self.loadingMoreView?.stopAnimating();
                     }
                 }catch{
                     self.loading = false;
+                    self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
             }
@@ -93,6 +96,7 @@ class MoviesListController: UIViewController{
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
                         self.loading = false;
+                        self.loadingMoreView?.stopAnimating();
                         if self.scrollToTop {
                             self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0),
                                                              at: .top,
@@ -101,6 +105,7 @@ class MoviesListController: UIViewController{
                     }
                 }catch{
                     self.loading = false;
+                    self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
             }
@@ -124,6 +129,7 @@ class MoviesListController: UIViewController{
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
                         self.loading = false;
+                        self.loadingMoreView?.stopAnimating();
                         if self.scrollToTop {
                             self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0),
                                                              at: .top,
@@ -132,6 +138,7 @@ class MoviesListController: UIViewController{
                     }
                 }catch{
                     self.loading = false;
+                    self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
             }
@@ -156,9 +163,11 @@ class MoviesListController: UIViewController{
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
                         self.loading = false;
+                        self.loadingMoreView?.stopAnimating();
                     }
                 }catch{
                     self.loading = false;
+                    self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
             }
@@ -181,9 +190,11 @@ class MoviesListController: UIViewController{
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
                         self.loading = false;
+                        self.loadingMoreView?.stopAnimating();
                     }
                 }catch{
                     self.loading = false;
+                    self.loadingMoreView?.stopAnimating();
                     Logger.print(items: error.localizedDescription);
                 }
             }
@@ -210,6 +221,16 @@ class MoviesListController: UIViewController{
         collectionview.alwaysBounceVertical = true;
         collectionview.backgroundColor = .white;
         collectionview.register(MoviesCell.self, forCellWithReuseIdentifier: "Cell");
+        
+        // Set up Infinite Scroll loading indicator
+        let frame = CGRect(x: 0, y: collectionview.contentSize.height, width: collectionview.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.isHidden = true
+        collectionview.addSubview(loadingMoreView!)
+        
+        var insets = collectionview.contentInset
+        insets.bottom += InfiniteScrollActivityView.defaultHeight
+        collectionview.contentInset = insets
         return collectionview;
     }()
     
@@ -317,11 +338,16 @@ extension MoviesListController :UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
-        let height = scrollView.frame.size.height;
-        let contentYoffset = scrollView.contentOffset.y;
-        let distanceFromBottom = scrollView.contentSize.height - contentYoffset;
-        if distanceFromBottom < height {
+        let scrollViewContentHeight = self.collectionView.contentSize.height;
+        let scrollOffsetThreshold = scrollViewContentHeight - self.collectionView.bounds.size.height;
+        
+        // When the user has scrolled past the threshold, start requesting
+        if(scrollView.contentOffset.y > scrollOffsetThreshold && self.collectionView.isDragging) {
             if !loading{
+                
+                let frame = CGRect(x: 0, y: self.collectionView.contentSize.height, width: self.collectionView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                loadingMoreView?.frame = frame
+                loadingMoreView!.startAnimating()
                 
                 scrollToTop = false;
                 
@@ -337,7 +363,7 @@ extension MoviesListController :UIScrollViewDelegate {
                     nowPlayingMovies();
                     break;
                 case .searching:
-                
+                    
                     if let searchText = searchText {
                         searchScrolling(text: searchText);
                     }

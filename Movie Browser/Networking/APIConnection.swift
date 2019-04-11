@@ -13,7 +13,7 @@ class AppConstants {
     
     public typealias Response = (_ data:Data? ,_ error:Error?) -> Void;
     
-    public static let imageBasePath = "https://image.tmdb.org/t/p/w185_and_h278_bestv2"
+    public static let imageBase = "https://image.tmdb.org/t/p/"
     
     public static let  API_KEY = "53eafbc1ab15fcd88324c96a958d6ca5"
     
@@ -75,17 +75,31 @@ class ApiConnections {
         };
     }
     
-    static func  downloadImage(url:URL ,onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
+    static func downloadMoviePoster(imagepathType:imagebasePath,posterPath:String,onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
         
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+        var url = AppConstants.imageBase;
+        switch imagepathType {
             
-            if error != nil {
-                return
-            }
-            if let imageData = data {
-                onImage(UIImage(data: imageData));
-            }
+        case .w185:
+            url = url + "w185"+"/\(posterPath)"
+            break;
+        case .w300:
+            url = url + "w300"+"/\(posterPath)"
+            break
+        }
+        if let imageURL = URL(string: url) {
             
-        }).resume()
+            URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
+                
+                if error != nil {
+                    return
+                }
+                if let imageData = data {
+                    onImage(UIImage(data: imageData));
+                }
+                
+            }).resume()
+            
+        }
     }
 }

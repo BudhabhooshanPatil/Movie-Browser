@@ -92,16 +92,22 @@ class MoviesCell: UICollectionViewCell {
     }()
     
     public func bind(movie:Movie , indexPath:IndexPath) -> Void {
+        
         name.text = movie.title;
+       
         print(Int(movie.voteAverage));
+        
         if Int(movie.voteAverage)-1 > 0 {
+            
             rating.text = AppConstants.ratingsDisplay[Int(movie.voteAverage) - 1] ;
         }
         
-        ApiConnections.downloadImage(url: URL(string: AppConstants.imageBasePath + movie.posterPath)!) { (_image) in
+        ApiConnections.downloadMoviePoster(imagepathType: .w185, posterPath: movie.posterPath) { (_image) in
             
             DispatchQueue.main.async {
+                
                 if (self.tag == indexPath.row) {
+                   
                     self.icon.image = _image;
                 }
             }

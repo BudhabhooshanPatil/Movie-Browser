@@ -14,6 +14,12 @@ internal enum Host {
     case version4
 }
 
+internal enum imagebasePath{
+    
+    case w185
+    case w300
+}
+
 internal enum Routes{
     
     case version_3

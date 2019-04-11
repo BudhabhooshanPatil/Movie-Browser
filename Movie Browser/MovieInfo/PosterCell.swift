@@ -63,7 +63,8 @@ class PosterCell: UITableViewCell {
         if movie.genres.count > 0 {
             self.genres.text = movie.genres.joined(separator: "/");
         }
-        ApiConnections.downloadImage(url: URL(string: AppConstants.imageBasePath + movie.posterPath)!) { (_image) in
+        
+        ApiConnections.downloadMoviePoster(imagepathType: .w300, posterPath: movie.posterPath) { (_image) in
             
             DispatchQueue.main.async {
                 if (self.tag == indexPath.row) {
@@ -77,7 +78,7 @@ class PosterCell: UITableViewCell {
         
         let imageView = UIImageView();
         imageView.clipsToBounds = true;
-        imageView.contentMode = .scaleAspectFill;
+        imageView.contentMode = .scaleToFill;
         imageView.translatesAutoresizingMaskIntoConstraints = false;
         imageView.image = UIImage(named: "iconPlaceHolder");
         imageView.layer.cornerRadius = 10.0
