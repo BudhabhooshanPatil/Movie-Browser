@@ -11,12 +11,18 @@ import UIKit
 class MoviesListController: UIViewController{
     
     var currentPage = 1;
+    var totalPages:Int = 0;
+    
     
     let decoder = JSONDecoder()
     var moviesArray:[Movie] = []
     var loading = false
     var searching = false;
+    var scrollToTop = false;
+    
     var movieType:MovieType = .nowPlaying;
+    var searchText:String? = nil;
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +37,8 @@ class MoviesListController: UIViewController{
         nowPlayingMovies();
         viewWillSetUpNaviagtionBar();
     }
+    
+    
     func viewWillSetUpNaviagtionBar() -> Void {
         
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -85,6 +93,11 @@ class MoviesListController: UIViewController{
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
                         self.loading = false;
+                        if self.scrollToTop {
+                            self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0),
+                                                             at: .top,
+                                                             animated: true)
+                        }
                     }
                 }catch{
                     self.loading = false;
@@ -111,6 +124,11 @@ class MoviesListController: UIViewController{
                     DispatchQueue.main.async {
                         self.collectionView.reloadData();
                         self.loading = false;
+                        if self.scrollToTop {
+                            self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0),
+                                                             at: .top,
+                                                             animated: true)
+                        }
                     }
                 }catch{
                     self.loading = false;
@@ -122,6 +140,9 @@ class MoviesListController: UIViewController{
     func searchMovie(text:String) -> Void {
         
         movieType = .searching;
+        if let searchText = searchText {
+            self.navigationItem.title = searchText + "...";
+        }
         
         ApiConnections.search(language: nil, searchText: text) { (data, error) in
             
@@ -129,6 +150,31 @@ class MoviesListController: UIViewController{
                 do{
                     let movies_ = try self.decoder.decode(Movies.self, from: data);
                     self.moviesArray.removeAll();
+                    for _movie in movies_.results{
+                        self.moviesArray.append(Movie(_movie: _movie));
+                    }
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData();
+                        self.loading = false;
+                    }
+                }catch{
+                    self.loading = false;
+                    Logger.print(items: error.localizedDescription);
+                }
+            }
+        }
+    }
+    func searchScrolling(text:String) -> Void {
+        
+        movieType = .searching;
+        self.loading = true;
+        
+        ApiConnections.search(page: currentPage, language: nil, searchText: text) { (data, error) in
+            
+            if let data = data{
+                do{
+                    let movies_ = try self.decoder.decode(Movies.self, from: data);
+                    self.currentPage = self.currentPage + 1;
                     for _movie in movies_.results{
                         self.moviesArray.append(Movie(_movie: _movie));
                     }
@@ -176,12 +222,14 @@ class MoviesListController: UIViewController{
             
             self.currentPage = 1;
             self.moviesArray.removeAll();
+            self.scrollToTop = true;
             self.popularMovies();
         }));
         alert.addAction(UIAlertAction(title: "Top Rated Movies", style: UIAlertAction.Style.default, handler: {(_) in
             
             self.currentPage = 1;
             self.moviesArray.removeAll();
+            self.scrollToTop = true;
             self.TopRatedMovies();
         }));
         self.present(alert, animated: true, completion: nil)
@@ -193,6 +241,7 @@ extension MoviesListController : UISearchResultsUpdating {
         searching = true;
         guard let text = searchController.searchBar.text else { return }
         if !text.isEmpty {
+            searchText = text;
             searchMovie(text: text);
         }
     }
@@ -274,6 +323,8 @@ extension MoviesListController :UIScrollViewDelegate {
         if distanceFromBottom < height {
             if !loading{
                 
+                scrollToTop = false;
+                
                 switch movieType{
                     
                 case .topRated:
@@ -285,8 +336,12 @@ extension MoviesListController :UIScrollViewDelegate {
                 case .nowPlaying:
                     nowPlayingMovies();
                     break;
-                case .searching: break
-                    
+                case .searching:
+                
+                    if let searchText = searchText {
+                        searchScrolling(text: searchText);
+                    }
+                    break
                 }
             }
         }

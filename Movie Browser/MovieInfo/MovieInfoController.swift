@@ -79,7 +79,7 @@ extension MovieInfoController :UITableViewDelegate {
         case 0:
             return self.view.frame.size.width;
         case 1:
-            return detailsofMovie.overview.height(withConstrainedWidth: self.view.frame.size.width, font: UIFont(name: "HelveticaNeue-Medium", size: 20.0)!);
+            return detailsofMovie.overview.height(withConstrainedWidth: self.view.frame.size.width, font: UIFont(name: "HelveticaNeue-Medium", size: 22)!);
         case 2:
             return 44.0;
         case 3:
