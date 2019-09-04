@@ -14,6 +14,8 @@ enum MovieType {
     case popular
     case nowPlaying
     case searching
+    
+    
 }
 
 class Movie: NSObject {
