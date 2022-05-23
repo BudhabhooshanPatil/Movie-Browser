@@ -32,7 +32,7 @@ internal enum imagebasePath{
     
 }
 
-internal enum Routes{
+internal enum Routes {
     
     case version_3
     case version_4

@@ -8,14 +8,7 @@
 
 import Foundation
 
-class TMDBException: NSObject {
-    
-    var statusCode:Int          = 0
-    var statusMessage:String    = ""
-    
-    init(code:Int , message:String) {
-        
-        self.statusCode = code;
-        self.statusMessage = message;
-    }
+struct TMDBException: Error {
+    let code: Int
+    let localizedDescription: String
 }

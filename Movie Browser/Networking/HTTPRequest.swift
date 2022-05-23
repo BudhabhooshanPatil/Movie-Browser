@@ -8,51 +8,45 @@
 
 import Foundation
 
-enum ResultType<T> {
-    case success
-    case failure(T)
-}
-
-private func handleRsponse (_ response:HTTPURLResponse ,serverdata:Data) -> ResultType<TMDBException> {
+struct HttpRequest {
     
-    switch response.statusCode {
-    case 200...299:
-        return .success
-    default:
-        return .failure(serverdata.exception);
-    }
-}
-internal typealias NetworkRouterCompletion = (_ data:Data? ,_ error:TMDBException?)->();
-
-internal func httpRequest(request : URLRequest, completionHandler: @escaping NetworkRouterCompletion) {
+    let session = URLSession.shared
     
-    let session = URLSession.shared;
-    
-    let task = session.dataTask(with: request){ (data, response, error) -> Void in
+    public func httpRequest<T: Codable>(request : URLRequest, completionHandler: @escaping (Result<T, TMDBException>) -> Void) {
         
-        Logger.log(request: request);
+        Logger.log(request: request)
         
-        guard error == nil else {
-            return
-        }
-        guard let content = data else {
-            return;
-        }
-        Logger.log(data: content);
-        
-        if let response = response as? HTTPURLResponse{
-            
-            let Result = handleRsponse(response, serverdata: content);
-            
-            switch Result{
-            case .success:
-                completionHandler(data,nil);
-                break;
-            case .failure(let networkFailureError):
-                completionHandler(nil ,networkFailureError);
-                break;
+        let task = session.dataTask(with: request){ (data, response, error) -> Void in
+            if let error = error {
+                let error = TMDBException(code: 1, localizedDescription: error.localizedDescription)
+                completionHandler(.failure(error))
+                return
             }
+            guard let content = data, let response = response as? HTTPURLResponse else { return }
+
+            switch self.handleURLResponse(response, content: content) {
+            case .success(_):
+                do {
+                    completionHandler(.success(try JSONDecoder().decode(T.self, from: content)))
+                } catch {
+                    let error = TMDBException(code: 1, localizedDescription: error.localizedDescription)
+                    completionHandler(.failure(error))
+                }
+            case .failure(let error):
+                completionHandler(.failure(error))
+            }
+            Logger.log(data: content)
+        }
+        task.resume()
+    }
+    
+    private func handleURLResponse (_ response:HTTPURLResponse, content: Data) -> Result<Bool, TMDBException> {
+        
+        switch response.statusCode {
+        case 200...299:
+            return .success(true)
+        default:
+            return .failure(content.exception)
         }
     }
-    task.resume();
 }

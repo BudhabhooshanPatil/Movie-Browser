@@ -77,7 +77,7 @@ class Logger {
                 Swift.print(items[idx], separator: separator, terminator: idx == (endIdx - 1) ? terminator : separator);
                 idx += 1;
             }
-                while idx < endIdx;
+            while idx < endIdx;
         }
     }
     

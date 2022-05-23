@@ -12,6 +12,8 @@ import UIKit
 
 class ApiConnections {
     
+    static var imageCache = NSCache<AnyObject, AnyObject>()
+    
     class func  getTopMovies(page:Int = 1 , language:String? ,completionHandler:@escaping AppConstants.Response) {
         
         let api = API(baseUrl: .version3, path: "movie/top_rated?page=\(page)&language=\(language ?? "en-US")&api_key=\(AppConstants.API_KEY)", httpMethod: .get).buildRequest;
@@ -56,21 +58,25 @@ class ApiConnections {
         };
     }
     
-    class func downloadMoviePoster(imagepathType:imagebasePath,posterPath:String,onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
+    class func downloadMoviePoster(imagepathType:imagebasePath,
+                                   posterPath:String,
+                                   onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
         
         let url = AppConstants.imageBase + imagepathType.value + "\(posterPath)";
         
-        if let imageURL = URL(string: url) {
-            
-            let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
-                
+        if let urlString = URL(string: url) {
+            if let cacheImage = imageCache.object(forKey: urlString as AnyObject) as? UIImage {
+                onImage(cacheImage);
+                return
+            }
+            let task = URLSession.shared.dataTask(with: urlString, completionHandler: { (data, response, error) in
                 if error != nil {
                     return
                 }
-                if let imageData = data {
-                    onImage(UIImage(data: imageData));
+                if let imageData = data, let image = UIImage(data: imageData) {
+                    imageCache.setObject(image, forKey: urlString as AnyObject)
+                    onImage(image);
                 }
-                
             });
             task.resume();
         }

@@ -59,21 +59,21 @@ class PosterCell: UITableViewCell {
     
     func bind(movie:Movie?, indexPath:IndexPath) -> Void {
         
-        guard let movie = movie else { return  }
-        self.title.text = movie.originalTitle;
-        
-        if movie.genres.count > 0 {
-            self.genres.text = movie.genres.joined(separator: "/");
-        }
-        
-        ApiConnections.downloadMoviePoster(imagepathType: .w300, posterPath: movie.posterPath) { (_image) in
-            
-            DispatchQueue.main.async {
-                if (self.tag == indexPath.row) {
-                    self.poster.image = _image;
-                }
-            }
-        }
+//        guard let movie = movie else { return  }
+//        self.title.text = movie.originalTitle;
+//        
+//        if movie.genres.count > 0 {
+//            self.genres.text = movie.genres.joined(separator: "/");
+//        }
+//        
+//        ApiConnections.downloadMoviePoster(imagepathType: .w300, posterPath: movie.posterPath) { (_image) in
+//            
+//            DispatchQueue.main.async {
+//                if (self.tag == indexPath.row) {
+//                    self.poster.image = _image;
+//                }
+//            }
+//        }
     }
     
     lazy var poster: UIImageView = {

@@ -8,86 +8,64 @@
 
 import Foundation
 
-enum MovieType {
+// MARK: - Result
+struct ResultElement: Codable {
+    let dates: Dates?
+    let page: Int?
+    let Movies: [Movie]?
+    let totalPages, totalResults: Int?
     
-    case topRated
-    case popular
-    case nowPlaying
-    case searching
-    
-    
-}
-
-class Movie: NSObject {
-    
-    var voteCount: Int = 0
-    var id: Int = 0
-    var video: Bool = false
-    var voteAverage: Double = 0.0
-    var title: String = ""
-    var popularity: Double = 0.0
-    var posterPath: String = ""
-    var originalLanguage: String = ""
-    var originalTitle: String = ""
-    var genreids: [Int] = []
-    var genres:[String] = [];
-    
-    var backdropPath: String = ""
-    var adult: Bool = false
-    var overview: String = ""
-    var releaseDate: String = ""
-    
-    init(model:Movies.Result) {
-        super.init();
-        
-        if let _voteCount = model.voteCount {
-            self.voteCount = _voteCount;
-        }
-        if let id = model.id {
-            self.id = id;
-        }
-        if let video = model.video {
-            self.video = video;
-        }
-        if let voteAverage = model.voteAverage {
-            self.voteAverage = voteAverage;
-        }
-        if let title = model.title {
-            self.title = title;
-        }
-        if let popularity = model.popularity {
-            self.popularity = popularity;
-        }
-        if let posterPath = model.posterPath {
-            self.posterPath = posterPath;
-        }
-        if let originalLanguage = model.originalLanguage {
-            self.originalLanguage = originalLanguage;
-        }
-        if let originalTitle = model.originalTitle {
-            self.originalTitle = originalTitle;
-        }
-        if let genreids = model.genreids {
-            self.genreids = genreids;
-        }
-        if let backdropPath = model.backdropPath {
-            self.backdropPath = backdropPath;
-        }
-        if let adult = model.adult {
-            self.adult = adult;
-        }
-        if let overview = model.overview {
-            self.overview = overview;
-        }
-        if let releaseDate = model.releaseDate {
-            self.releaseDate = releaseDate;
-        }
-        if let geners = model.genres {
-            
-            for item in geners {
-                self.genres.append(item.name);
-            }
-        }
+    enum CodingKeys: String, CodingKey {
+        case dates, page
+        case Movies = "results"
+        case totalPages = "total_pages"
+        case totalResults = "total_results"
     }
 }
 
+// MARK: - Movie
+struct Movie: Codable {
+    let adult: Bool?
+    let backdropPath: String?
+    let genreIDS: [Int]?
+    let id: Int?
+    let originalLanguage, originalTitle, overview: String?
+    let popularity: Double?
+    let posterPath, releaseDate, title: String?
+    let video: Bool?
+    let voteAverage: Double?
+    let voteCount: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case adult
+        case backdropPath = "backdrop_path"
+        case genreIDS = "genre_ids"
+        case id
+        case originalLanguage = "original_language"
+        case originalTitle = "original_title"
+        case overview, popularity
+        case posterPath = "poster_path"
+        case releaseDate = "release_date"
+        case title, video
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+    }
+}
+
+// MARK: - Dates
+struct Dates: Codable {
+    let maximum, minimum: String?
+}
+
+// MARK: - TMDBError
+struct TMDBError: Codable {
+    let statusCode: Int
+    let statusMessage: String
+    let success: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case statusCode = "status_code"
+        case statusMessage = "status_message"
+        case success
+    }
+}

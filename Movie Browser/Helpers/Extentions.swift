@@ -23,9 +23,9 @@ extension Data {
     var exception:TMDBException {
         do {
             let serverError = try JSONDecoder().decode(TMDBError.self, from: self);
-            return TMDBException(code: serverError.statusCode, message: serverError.statusMessage);
+            return TMDBException(code: serverError.statusCode, localizedDescription: serverError.statusMessage)
         } catch  {
-            return TMDBException(code: 0, message: error.localizedDescription);
+            return TMDBException(code: 0, localizedDescription: error.localizedDescription)
         }
     }
 }
