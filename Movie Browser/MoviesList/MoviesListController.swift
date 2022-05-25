@@ -35,12 +35,44 @@ class MoviesListController: UIViewController{
         ])
         
         self.viewModel.delegate = self
-        self.viewModel.nowPlayingMovies()
+        self.viewModel.loadNowPlayingMovies()
+    }
+    
+    private func displayError(error: TMDBException) {
+        let alert = UIAlertController(
+            title: "An error occured",
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(
+            title: "Dismiss",
+            style: .default
+        ))
+        
+        alert.addAction(UIAlertAction(
+            title: "Retry",
+            style: .default,
+            handler: { [weak self] _ in
+                self?.viewModel.loadNowPlayingMovies()
+            }
+        ))
+        
+        self.present(alert, animated: true)
     }
 }
 
 extension MoviesListController: MovieListViewModelDelegate {
+    
+    func didReceivedError(error: TMDBException) {
+        self.contentView.collectionViewBackground?.stopAnimating()
+        self.contentView.loadingMoreView?.stopAnimating()
+        self.displayError(error: error)
+    }
+    
     func didReceivedCurrentPopularMovies() {
         self.contentView.reload()
+        self.contentView.collectionViewBackground?.stopAnimating()
+        self.contentView.loadingMoreView?.stopAnimating()
     }
 }

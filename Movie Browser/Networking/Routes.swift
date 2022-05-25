@@ -8,49 +8,9 @@
 
 import Foundation
 
-internal enum Host {
-    
-    case version3
-    case version4
-}
-
-internal enum imagebasePath{
-    
-    case w185
-    case w300
-    
-    var value:String {
-        
-        switch self {
-            
-        case .w185:
-            return "w185";
-        case .w300:
-            return "w300";
-        }
-    }
-    
-}
-
-internal enum Routes {
-    
-    case version_3
-    case version_4
-    case popolar
-    case top_rated
-    
-    var value:String {
-        
-        switch self {
-            
-        case .version_3:
-            return "https://api.themoviedb.org/3/"
-        case .version_4:
-            return "https://api.themoviedb.org/4/movie/"
-        case .popolar:
-            return "popular"
-        case .top_rated:
-            return "top_rated"
-        }
-    }
+enum MovieEndpoint: String {
+    case popular = "popular"
+    case nowPlaying = "top_rated"
+    case upcoming = "toprated"
+    case topRated = "torated"
 }

@@ -12,12 +12,12 @@ import Foundation
 struct ResultElement: Codable {
     let dates: Dates?
     let page: Int?
-    let Movies: [Movie]?
+    let movies: [Movie]?
     let totalPages, totalResults: Int?
     
     enum CodingKeys: String, CodingKey {
         case dates, page
-        case Movies = "results"
+        case movies = "results"
         case totalPages = "total_pages"
         case totalResults = "total_results"
     }

@@ -8,45 +8,57 @@
 
 import Foundation
 
-internal protocol EndPointType {
-    var baseURL: Host { get }
+protocol Endpoint {
+    var baseURL: String { get }
     var path: String { get }
-    var httpMethod: HTTPMethod { get }
+    var method: HTTPMethod { get }
+    var queryItems: [URLQueryItem]? { get }
+    var body: Data? { get }
 }
 
-internal struct API:EndPointType {
+extension Endpoint {
+    var baseURL: String {
+        return "https://api.themoviedb.org/3/movie/"
+    }
+}
+
+enum ImagebasePath: String {
+    case w185
+    case w300
+}
+
+struct API: Endpoint {
     
-    public var baseURL: Host
+    var path: String
+    var method: HTTPMethod
+    var queryItems: [URLQueryItem]?
+    var body: Data?
     
-    public var path: String
-    
-    public var httpMethod: HTTPMethod
-    
-    init(baseUrl:Host ,path:String , httpMethod:HTTPMethod) {
-        self.baseURL = baseUrl
+    init(path: String, httpMethod: HTTPMethod, body: Data? = nil, queryItems: [URLQueryItem]? = nil) {
         self.path = path
-        self.httpMethod = httpMethod
+        self.method = httpMethod
+        self.body = body
+        self.queryItems = queryItems
     }
     
-    var buildRequest:URLRequest {
+    var buildRequest: URLRequest {
         
-        var url:String {
-            
-            switch self.baseURL {
-            case .version3:
-                return Routes.version_3.value + self.path
-            case .version4:
-                return Routes.version_4.value + self.path
-            }
-        }
+        var urlComponents = URLComponents(string: self.baseURL + self.path)
+        urlComponents?.queryItems = self.queryItems
         
-        var request = URLRequest(url: URL(string: url)!,
+        urlComponents?.queryItems?.append(self.apiKeyQueryItem)
+        
+        guard let url = urlComponents?.url else { fatalError() }
+        var request = URLRequest(url:url,
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
                                  timeoutInterval: 60.0)
         
-        request.httpMethod = self.httpMethod.rawValue
-        
+        request.httpMethod = self.method.rawValue
+        request.httpBody = self.body
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
         return request
     }
+    
+    private var apiKeyQueryItem =  URLQueryItem(name: "api_key", value: Constants.APIDetails.APIKey.rawValue)
 }
-

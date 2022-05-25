@@ -10,7 +10,7 @@ import UIKit
 
 class MoviesCell: UICollectionViewCell {
     
-    static let classIdentifier = "\(String(describing: MoviesCell.self))"
+    static let identifier = "\(String(describing: MoviesCell.self))"
     
     let container: UIView = {
         let view = UIView()
@@ -39,7 +39,8 @@ class MoviesCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontSizeToFitWidth = true
         label.font =  UIFont(name: "HelveticaNeue-Medium", size: 14.0)
-        label.textAlignment = .center
+        label.textAlignment = .left
+        label.numberOfLines = 2
         return label
     }()
     
@@ -55,24 +56,28 @@ class MoviesCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupSubViews()
-        self.setupConstraints()
-        print(MoviesCell.classIdentifier)
+        self.setupViews()
+        self.setupLayouts()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupSubViews() -> Void {
+    private func setupViews() -> Void {
         self.contentView.addSubview(self.container)
         self.imageContainer.addSubview(self.moviePosterImage)
         self.container.addSubview(self.imageContainer)
         self.container.addSubview(self.movieName)
         self.container.addSubview(self.movieRatings)
+        
+        self.imageContainer.layer.shadowColor = UIColor.black.cgColor
+        self.imageContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
+        self.imageContainer.layer.shadowOpacity = 0.7
+        self.imageContainer.layer.shadowRadius = 4.0
     }
     
-    private func setupConstraints() {
+    private func setupLayouts() {
         
         // whole container
         NSLayoutConstraint.activate([
@@ -99,10 +104,10 @@ class MoviesCell: UICollectionViewCell {
         
         // movie name label
         NSLayoutConstraint.activate([
-            self.movieName.topAnchor.constraint(equalTo: self.imageContainer.bottomAnchor),
+            self.movieName.topAnchor.constraint(equalTo: self.imageContainer.bottomAnchor, constant: 8.0),
             self.movieName.leadingAnchor.constraint(equalTo: self.container.leadingAnchor),
             self.movieName.trailingAnchor.constraint(equalTo: self.container.trailingAnchor),
-            self.movieName.heightAnchor.constraint(equalToConstant: 24.0)
+            self.movieName.heightAnchor.constraint(equalToConstant: 34.0)
         ])
         
         // movie ratings
@@ -124,7 +129,7 @@ class MoviesCell: UICollectionViewCell {
             movieRatings.text = AppConstants.ratingsDisplay[Int(voteAverage) - 1]
         }
         guard let posterPath = movie.posterPath else { return }
-        ApiConnections.downloadMoviePoster(imagepathType: .w185, posterPath: posterPath) { (_image) in
+        ApiConnections().downloadMoviePoster(imagepathType: .w185, posterPath: posterPath) { (_image) in
             DispatchQueue.main.async {
                 if (self.tag == indexPath.row) {
                     self.moviePosterImage.image = _image

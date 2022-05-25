@@ -10,12 +10,8 @@ import Foundation
 
 class AppConstants:NSObject {
     
-    public typealias Response = (_ data:Data? ,_ error:TMDBException?) -> Void;
-    
     public static let imageBase = "https://image.tmdb.org/t/p/"
-    
-    public static let API_KEY = "53eafbc1ab15fcd88324c96a958d6ca5"
-    
+        
     public static let ratingsDisplay = ["★☆☆☆☆☆☆☆☆☆",
                                         "★★☆☆☆☆☆☆☆☆",
                                         "★★★☆☆☆☆☆☆☆",
@@ -26,4 +22,12 @@ class AppConstants:NSObject {
                                         "★★★★★★★★☆☆",
                                         "★★★★★★★★★☆",
                                         "★★★★★★★★★★"];
+}
+
+struct Constants {
+    enum APIDetails: String {
+        case APIScheme  = "https"
+        case APIKey     = "53eafbc1ab15fcd88324c96a958d6ca5"
+        case APIHost    = "api.themoviedb.org/3/movie/"
+    }
 }

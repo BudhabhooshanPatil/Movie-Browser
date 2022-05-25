@@ -9,19 +9,18 @@
 import Foundation
 
 struct HttpRequest {
-    
-    let session = URLSession.shared
-    
-    public func httpRequest<T: Codable>(request : URLRequest, completionHandler: @escaping (Result<T, TMDBException>) -> Void) {
         
+    public func dataTask<T: Codable>(request : URLRequest,
+                                     completionHandler: @escaping (Result<T, TMDBException>) -> Void) {
+                
         Logger.log(request: request)
-        
-        let task = session.dataTask(with: request){ (data, response, error) -> Void in
+        let task = URLSession.shared.dataTask(with: request){ (data, response, error) -> Void in
             if let error = error {
                 let error = TMDBException(code: 1, localizedDescription: error.localizedDescription)
                 completionHandler(.failure(error))
                 return
             }
+            
             guard let content = data, let response = response as? HTTPURLResponse else { return }
 
             switch self.handleURLResponse(response, content: content) {
@@ -35,7 +34,6 @@ struct HttpRequest {
             case .failure(let error):
                 completionHandler(.failure(error))
             }
-            Logger.log(data: content)
         }
         task.resume()
     }
