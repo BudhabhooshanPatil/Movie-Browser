@@ -25,6 +25,7 @@ extension Endpoint {
 enum ImagebasePath: String {
     case w185
     case w300
+    case w500
 }
 
 struct API: Endpoint {
@@ -44,10 +45,10 @@ struct API: Endpoint {
     var buildRequest: URLRequest {
         
         var urlComponents = URLComponents(string: self.baseURL + self.path)
-        urlComponents?.queryItems = self.queryItems
-        
-        urlComponents?.queryItems?.append(self.apiKeyQueryItem)
-        
+        urlComponents?.queryItems = [self.apiKeyQueryItem]
+        if let queryItems = self.queryItems {
+            urlComponents?.queryItems?.append(contentsOf: queryItems)
+        }
         guard let url = urlComponents?.url else { fatalError() }
         var request = URLRequest(url:url,
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,

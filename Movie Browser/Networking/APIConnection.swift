@@ -19,19 +19,43 @@ class ApiConnections {
     public func getNowPlaying<T: Codable>(currentPage: Int = 1,
                                           completion: @escaping (Result<T, TMDBException>) -> Void) {
         
-        let queryParams = [ URLQueryItem(name: "page", value: "\(currentPage)")]
+        let queryParams = [URLQueryItem(name: "page", value: "\(currentPage)")]
         
-        let sendRequest = API(path: MovieEndpoint.nowPlaying.rawValue, httpMethod: .get,queryItems: queryParams).buildRequest
+        let sendRequest = API(path: MovieEndpoint.popular.rawValue, httpMethod: .get,queryItems: queryParams).buildRequest
         httpRequest.dataTask(request: sendRequest) { (response: Result<T, TMDBException>) in
             completion(response)
         }
     }
     
+    func getThePrimaryInformationAboutAmovie<T: Codable>(aMovie: Movie?, completion: @escaping (Result<T, TMDBException>) -> Void) {
+        guard let movieId = aMovie?.id else { fatalError("movie id not found") }
+        let sendRequest = API(path: "\(movieId)", httpMethod: .get).buildRequest
+        httpRequest.dataTask(request: sendRequest) { (response:Result<T,TMDBException>) in
+            completion(response)
+        }
+    }
+    
+    func getTheImagesThatBelongToAMovie<T: Codable>(aMovie: Movie?, completion: @escaping (Result<T, TMDBException>) -> Void) {
+        guard let movieId = aMovie?.id else { fatalError("movie id not found") }
+        let sendRequest = API(path: "\(movieId)/images", httpMethod: .get).buildRequest
+        httpRequest.dataTask(request: sendRequest) { (response:Result<T,TMDBException>) in
+            completion(response)
+        }
+    }
+    
+    public func getTheCastAndCrewForAMovie<T: Codable>(aMovie: Movie?, completion: @escaping (Result<T, TMDBException>) -> Void) -> Void {
+        guard let movieId = aMovie?.id else { fatalError("movie id not found") }
+        let sendRequest = API(path: "\(movieId)/credits", httpMethod: .get).buildRequest
+        httpRequest.dataTask(request: sendRequest) { (response:Result<T,TMDBException>) in
+            completion(response)
+        }
+    }
+
     public func downloadMoviePoster(imagepathType: ImagebasePath,
                                     posterPath:String,
                                     onImage:@escaping ( _ image:UIImage?)-> Void) -> Void {
         
-        let url = AppConstants.imageBase + imagepathType.rawValue + "\(posterPath)";
+        let url = AppConstants.imageBase + "w185" + "\(posterPath)";
         
         if let urlString = URL(string: url) {
             

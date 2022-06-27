@@ -116,7 +116,7 @@ extension MovieListView :UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
-        
+        self.viewModel?.delegate?.didSelectItemAt(indexPath: indexPath)
     }
 }
 

@@ -75,4 +75,13 @@ extension MoviesListController: MovieListViewModelDelegate {
         self.contentView.collectionViewBackground?.stopAnimating()
         self.contentView.loadingMoreView?.stopAnimating()
     }
+    
+    func didSelectItemAt(indexPath: IndexPath) {
+        let controller = MovieInfoController()
+        let viewModel = MovieInfoViewModel(connection: ApiConnections())
+        viewModel.movie = self.viewModel.moviesArray[indexPath.row]
+//        viewModel.movie.id = 19404
+        controller.viewModel = viewModel
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 }

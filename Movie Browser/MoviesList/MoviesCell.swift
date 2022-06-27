@@ -38,8 +38,20 @@ class MoviesCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontSizeToFitWidth = true
-        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 14.0)
-        label.textAlignment = .left
+        label.font =  UIFont(name: "HelveticaNeue-Bold", size: 11.0)
+        label.textAlignment = .center
+        label.textColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
+        label.numberOfLines = 3
+        return label
+    }()
+    
+    let movieReleaseDate: UILabel  = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.adjustsFontSizeToFitWidth = true
+        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 11.0)
+        label.textAlignment = .center
+        label.textColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
         label.numberOfLines = 2
         return label
     }()
@@ -48,11 +60,20 @@ class MoviesCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontSizeToFitWidth = true
-        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 18.0)
-        label.textAlignment = .left
+        label.font =  UIFont(name: "HelveticaNeue-Medium", size: 10.0)
+        label.textAlignment = .center
         label.textColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1)
         return label
     }()
+    
+    lazy var stackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [self.movieName, self.movieReleaseDate, self.movieRatings])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.distribution = .fillProportionally
+        return stack
+    }()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -68,13 +89,12 @@ class MoviesCell: UICollectionViewCell {
         self.contentView.addSubview(self.container)
         self.imageContainer.addSubview(self.moviePosterImage)
         self.container.addSubview(self.imageContainer)
-        self.container.addSubview(self.movieName)
-        self.container.addSubview(self.movieRatings)
+        self.container.addSubview(self.stackView)
         
-        self.imageContainer.layer.shadowColor = UIColor.black.cgColor
-        self.imageContainer.layer.shadowOffset = CGSize(width: 3, height: 3)
-        self.imageContainer.layer.shadowOpacity = 0.7
-        self.imageContainer.layer.shadowRadius = 4.0
+        self.imageContainer.layer.shadowColor = UIColor.darkGray.cgColor
+        self.imageContainer.layer.shadowOffset = CGSize(width: 1, height: 1)
+        self.imageContainer.layer.shadowOpacity = 0.5
+        self.imageContainer.layer.shadowRadius = 2.0
     }
     
     private func setupLayouts() {
@@ -104,30 +124,25 @@ class MoviesCell: UICollectionViewCell {
         
         // movie name label
         NSLayoutConstraint.activate([
-            self.movieName.topAnchor.constraint(equalTo: self.imageContainer.bottomAnchor, constant: 8.0),
-            self.movieName.leadingAnchor.constraint(equalTo: self.container.leadingAnchor),
-            self.movieName.trailingAnchor.constraint(equalTo: self.container.trailingAnchor),
-            self.movieName.heightAnchor.constraint(equalToConstant: 34.0)
+            self.stackView.topAnchor.constraint(equalTo: self.imageContainer.bottomAnchor, constant: 8.0),
+            self.stackView.leadingAnchor.constraint(equalTo: self.container.leadingAnchor),
+            self.stackView.trailingAnchor.constraint(equalTo: self.container.trailingAnchor),
+            self.stackView.bottomAnchor.constraint(equalTo: self.container.bottomAnchor)
         ])
-        
-        // movie ratings
-        NSLayoutConstraint.activate([
-            self.movieRatings.topAnchor.constraint(equalTo: self.movieName.bottomAnchor),
-            self.movieRatings.leadingAnchor.constraint(equalTo: self.container.leadingAnchor),
-            self.movieRatings.trailingAnchor.constraint(equalTo: self.container.trailingAnchor),
-            self.movieRatings.bottomAnchor.constraint(equalTo: self.container.bottomAnchor),
-            self.movieRatings.heightAnchor.constraint(equalToConstant: 24.0)
-        ])
+     
+        for item in self.stackView.arrangedSubviews {
+            NSLayoutConstraint.activate([
+                item.heightAnchor.constraint(greaterThanOrEqualToConstant: 14.0)
+            ])
+        }
     }
     
     func bind(movie:Movie?, indexPath:IndexPath) -> Void {
         guard let movie = movie else { return }
         guard let voteAverage = movie.voteAverage else { return }
         self.movieName.text = movie.title
-        
-        if Int(voteAverage)-1 > 0 {
-            movieRatings.text = AppConstants.ratingsDisplay[Int(voteAverage) - 1]
-        }
+        self.movieRatings.text = "★" + " \(voteAverage)"
+        self.movieReleaseDate.text = movie.releaseDate
         guard let posterPath = movie.posterPath else { return }
         ApiConnections().downloadMoviePoster(imagepathType: .w185, posterPath: posterPath) { (_image) in
             DispatchQueue.main.async {

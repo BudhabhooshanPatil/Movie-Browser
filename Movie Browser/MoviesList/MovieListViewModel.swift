@@ -11,6 +11,7 @@ import Foundation
 protocol MovieListViewModelDelegate: AnyObject {
     func didReceivedCurrentPopularMovies()
     func didReceivedError(error: TMDBException)
+    func didSelectItemAt(indexPath: IndexPath)
 }
 
 class MovieListViewModel: NSObject {
