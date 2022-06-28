@@ -52,7 +52,7 @@ class MovieImagesTableViewCell: UITableViewCell {
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            self.collectionView.heightAnchor.constraint(equalToConstant: 220.0)
+            self.collectionView.heightAnchor.constraint(equalToConstant: 160.0)
         ])
     }
     
@@ -90,6 +90,6 @@ extension MovieImagesTableViewCell: UICollectionViewDelegate {
 extension MovieImagesTableViewCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 300.0, height: 220.0 - (2 * 8.0))
+        return CGSize(width: 260.0, height: 160 - (2 * 8.0))
     }
 }

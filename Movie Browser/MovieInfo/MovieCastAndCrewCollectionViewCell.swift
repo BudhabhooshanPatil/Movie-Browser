@@ -37,15 +37,15 @@ class MovieCastAndCrewCollectionViewCell: UICollectionViewCell {
     lazy var originalName: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14.0)
         label.textAlignment = .center
+        label.font = UIFont(name: "Poppins-Regular", size: 12.0)
         return label
     }()
     
     lazy var knownForDepartment: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14.0)
+        label.font = UIFont(name: "Poppins-Regular", size: 12.0)
         label.textAlignment = .center
         return label
     }()
@@ -53,7 +53,7 @@ class MovieCastAndCrewCollectionViewCell: UICollectionViewCell {
     lazy var characterPlayed: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14.0)
+        label.font = UIFont(name: "Poppins-Regular", size: 12.0)
         label.textAlignment = .center
         label.numberOfLines = 2
         return label

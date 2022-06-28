@@ -15,24 +15,24 @@ class MovieInfoTopNameTableViewCell: UITableViewCell {
     let titleNameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 24.0)
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.font = UIFont(name: "Poppins-Medium", size: 24.0)
         return label
     }()
     
-    let directorNameLabel: UILabel = {
+    let releaseDateLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14.0)
         label.textAlignment = .center
+        label.font = UIFont(name: "Poppins-Regular", size: 14.0)
         return label
     }()
     
     let productionCompaniesLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14.0)
+        label.font = UIFont(name: "Poppins-Regular", size: 14.0)
         label.textAlignment = .center
         return label
     }()
@@ -46,7 +46,7 @@ class MovieInfoTopNameTableViewCell: UITableViewCell {
     }()
     
     lazy var topStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [self.titleNameLabel,self.directorNameLabel])
+        let stackView = UIStackView(arrangedSubviews: [self.titleNameLabel,self.releaseDateLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fill
@@ -88,9 +88,8 @@ class MovieInfoTopNameTableViewCell: UITableViewCell {
     
     public func configure(moviePrimaryInformationResult:MoviePrimaryInformationResult?) {
         self.titleNameLabel.text = moviePrimaryInformationResult?.originalTitle
-        self.directorNameLabel.text = moviePrimaryInformationResult?.releaseDate?.toDate()
+        self.releaseDateLabel.text = moviePrimaryInformationResult?.releaseDate?.toDate()
         self.productionCompaniesLabel.text = moviePrimaryInformationResult?.productionCompanies?[0].name
-//        self.spokenLanguagesLabel.text = moviePrimaryInformationResult?.spokenLanguages?[0].englishName
     }
     
     private func setupLayouts() {

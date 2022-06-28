@@ -15,9 +15,8 @@ class MovieDescriptionTableViewCell: UITableViewCell {
     let descripntionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16.0)
+        label.font = UIFont(name: "Poppins-Regular", size: 13.0)
         label.numberOfLines = 0
-        label.text = "T'Challa, heir to the hidden but advanced kingdom of Wakanda, must step forward to lead his people into a new future and must confront a challenger from his country's past."
         return label
     }()
     
