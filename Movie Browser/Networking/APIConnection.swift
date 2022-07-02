@@ -16,6 +16,12 @@ class ApiConnections {
     
     private let httpRequest = HttpRequest()
     
+    public func loadRequest<T: Codable>(request: URLRequest,
+                                        completionHandler: @escaping (Result<T, TMDBException>) -> Void) {
+        httpRequest.dataTask(request: request,
+                             completionHandler: completionHandler)
+    }
+    
     public func getNowPlaying<T: Codable>(currentPage: Int = 1,
                                           completion: @escaping (Result<T, TMDBException>) -> Void) {
         

@@ -12,7 +12,10 @@ class MovieListView: UIView {
     
     var viewModel: MovieListViewModel?
     var loadingMoreView: ActivityIndicatorView?
-    var collectionViewBackground: ActivityIndicatorView?
+    
+    var collectionViewBackground: ActivityIndicatorView{
+        return ActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+    }
     
     lazy var collectionView: UICollectionView = {
         
@@ -20,31 +23,27 @@ class MovieListView: UIView {
         layout.scrollDirection = .vertical
         layout.sectionInset = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
         
-        let collectionview = UICollectionView(frame: .zero,
-                                              collectionViewLayout: layout)
+        let collectionview = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionview.translatesAutoresizingMaskIntoConstraints = false
         collectionview.alwaysBounceVertical = true
         collectionview.backgroundColor = .white
-        collectionview.register(MoviesCell.self,
-                                forCellWithReuseIdentifier: MoviesCell.identifier)
+        collectionview.register(MoviesCell.self, forCellWithReuseIdentifier: MoviesCell.identifier)
         
         // Set up Infinite Scroll loading indicator
         let frame = CGRect(x: 0, y: collectionview.contentSize.height, width: collectionview.bounds.size.width, height: ActivityIndicatorView.defaultHeight)
         loadingMoreView = ActivityIndicatorView(frame: frame)
-        loadingMoreView!.isHidden = true
+        loadingMoreView?.isHidden = true
         collectionview.addSubview(loadingMoreView!)
         
         var insets = collectionview.contentInset
         insets.bottom += ActivityIndicatorView.defaultHeight
         collectionview.contentInset = insets
         
-        collectionViewBackground = ActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        collectionViewBackground?.startAnimating()
-        collectionViewBackground?.center = self.center
         collectionview.backgroundView = collectionViewBackground
-        
+        collectionViewBackground.center = self.center
+
         return collectionview
-    }()    
+    }()
     
     init(viewModel: MovieListViewModel) {
         super.init(frame: .zero)
@@ -104,8 +103,7 @@ extension MovieListView :UICollectionViewDataSource {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MoviesCell.identifier,
                                                          for: indexPath) as? MoviesCell {
             cell.tag = indexPath.row
-            cell.bind(movie: self.viewModel?.moviesArray[indexPath.row],
-                      indexPath: indexPath)
+            cell.bind(movie: self.viewModel?.moviesArray[indexPath.row], indexPath: indexPath)
             return cell
         }
         
@@ -114,8 +112,7 @@ extension MovieListView :UICollectionViewDataSource {
 }
 extension MovieListView :UICollectionViewDelegate {
     
-    func collectionView(_ collectionView: UICollectionView,
-                        didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.viewModel?.delegate?.didSelectItemAt(indexPath: indexPath)
     }
 }
@@ -123,20 +120,21 @@ extension MovieListView :UICollectionViewDelegate {
 extension MovieListView : UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
+        guard self.viewModel?.loading == false else { return }
         let scrollViewContentHeight = self.collectionView.contentSize.height;
         let scrollOffsetThreshold = scrollViewContentHeight - self.collectionView.bounds.size.height;
         
-        // When the user has scrolled past the threshold, start requesting
         if(scrollView.contentOffset.y > scrollOffsetThreshold && self.collectionView.isDragging) {
-            guard self.viewModel?.loading == false else { return }
             
             let frame = CGRect(x: 0, y: self.collectionView.contentSize.height, width: self.collectionView.bounds.size.width, height: ActivityIndicatorView.defaultHeight)
-            loadingMoreView?.frame = frame
-            loadingMoreView?.startAnimating()
-
+            
+            self.loadingMoreView?.frame = frame
+            self.loadingMoreView?.startAnimating()
+            
+            self.viewModel?.loading = true
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.viewModel?.loadNowPlayingMovies()
+                self.viewModel?.popular().load()
             }
         }
     }

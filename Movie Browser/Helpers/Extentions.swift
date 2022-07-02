@@ -17,7 +17,19 @@ extension String {
         
         return ceil(boundingBox.height) + 32.0
     }
+    
+    func toDate() -> String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let dt = dateFormatter.date(from: self) {
+            dateFormatter.dateFormat = "dd-MMM-yyyy"
+            let formatedStringDate = dateFormatter.string(from: dt)
+            return formatedStringDate
+        }
+        return nil
+    }
 }
+
 extension Data {
     
     var exception:TMDBException {
@@ -27,5 +39,13 @@ extension Data {
         } catch  {
             return TMDBException(code: 0, localizedDescription: error.localizedDescription)
         }
+    }
+}
+
+extension Date {
+    func toString(style: DateFormatter.Style) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = style
+        return dateFormatter.string(from: self)
     }
 }

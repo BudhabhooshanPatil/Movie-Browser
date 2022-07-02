@@ -9,8 +9,8 @@
 import Foundation
 
 enum MovieEndpoint: String {
-    case popular = "popular"
-    case nowPlaying = "top_rated"
-    case upcoming = "toprated"
-    case topRated = "torated"
+    case popular    = "popular"
+    case nowPlaying = "now_playing"
+    case upcoming   = "upcoming"
+    case topRated   = "top_rated"
 }

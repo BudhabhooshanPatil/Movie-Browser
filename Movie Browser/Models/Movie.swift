@@ -211,24 +211,3 @@ struct Backdrop: Codable {
     }
 }
 
-extension Date {
-    func toString(style: DateFormatter.Style) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = style
-        return dateFormatter.string(from: self)
-    }
-}
-
-extension String {
-    func toDate() -> String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        if let dt = dateFormatter.date(from: self) {
-            dateFormatter.dateFormat = "dd-MMM-yyyy"
-            let formatedStringDate = dateFormatter.string(from: dt)
-            return formatedStringDate
-        }
-        return nil
-    }
-}
-

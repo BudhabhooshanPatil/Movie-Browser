@@ -10,10 +10,8 @@ import UIKit
 
 class MoviesListController: UIViewController{
     
-    // view-model
     let viewModel = MovieListViewModel()
     
-    // view with view-model dependancy injection
     lazy var contentView: MovieListView = {
         let view = MovieListView(viewModel: self.viewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -22,65 +20,110 @@ class MoviesListController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // add content-view as subview in view
+        self.setupViews()
+        self.setupLayouts()
+        self.setupNavigationBar()
+        self.viewModel.delegate = self
+        self.viewModel.popular().load()
+    }
+    
+    private func setupViews() {
         self.view.addSubview(self.contentView)
-        
-        // set-up user interface constraints as no storyboard
+    }
+    
+    private func setupLayouts() {
         NSLayoutConstraint.activate([
             self.contentView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.contentView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.contentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.contentView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
-        
-        self.viewModel.delegate = self
-        self.viewModel.loadNowPlayingMovies()
     }
     
+    private func setupNavigationBar() {
+        let barButtonItem = UIBarButtonItem(title: "Switch", style: .plain, target: self, action: #selector(menuButtonTapped))
+        self.navigationItem.rightBarButtonItem = barButtonItem
+    }
+    
+    @objc fileprivate func menuButtonTapped() {
+        
+        // TODO: optimize
+        let popularHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
+            self?.contentView.collectionViewBackground.startAnimating()
+            self?.viewModel.popular().load(shouldReset: true)
+        }
+        
+        let upComingHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
+            self?.contentView.collectionViewBackground.startAnimating()
+            self?.viewModel.upComing().load(shouldReset: true)
+        }
+        
+        let topRatedHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
+            self?.contentView.collectionViewBackground.startAnimating()
+            self?.viewModel.topRated().load(shouldReset: true)
+        }
+        
+        let nowPlayingHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
+            self?.contentView.collectionViewBackground.startAnimating()
+            self?.viewModel.nowPlaying().load(shouldReset: true)
+        }
+        
+        let cancelHandler = {(alertAction: UIAlertAction) -> Void in
+            // do nothing
+        }
+        
+        // TODO: localization
+        AppAlertBuilder(viewController: self)
+            .withTitle("Select")
+            .preferredStyle(.actionSheet)
+            .onCustomAction(title: "Popular", popularHandler)
+            .onCustomAction(title: "Now Playing", nowPlayingHandler)
+            .onCustomAction(title: "Upcoming", upComingHandler)
+            .onCustomAction(title: "Top Rated", topRatedHandler)
+            .onCancelAction(title: "Cancel", cancelHandler)
+            .show()
+    }
+    
+    
     private func displayError(error: TMDBException) {
-        let alert = UIAlertController(
-            title: "An error occured",
-            message: error.localizedDescription,
-            preferredStyle: .alert
-        )
         
-        alert.addAction(UIAlertAction(
-            title: "Dismiss",
-            style: .default
-        ))
+        let successHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
+            self?.viewModel.popular().load()
+        }
         
-        alert.addAction(UIAlertAction(
-            title: "Retry",
-            style: .default,
-            handler: { [weak self] _ in
-                self?.viewModel.loadNowPlayingMovies()
-            }
-        ))
+        let cancelHandler = {(alertAction: UIAlertAction) -> Void in
+            // do nothing
+        }
         
-        self.present(alert, animated: true)
+        // TODO: localization
+        AppAlertBuilder(viewController: self)
+            .withTitle("An error occured")
+            .andMessage(error.localizedDescription)
+            .onSuccessAction(title: "Retry", successHandler)
+            .onCancelAction(title: "Cancel", cancelHandler)
+            .show()
     }
 }
 
 extension MoviesListController: MovieListViewModelDelegate {
     
     func didReceivedError(error: TMDBException) {
-        self.contentView.collectionViewBackground?.stopAnimating()
+        self.contentView.collectionViewBackground.stopAnimating()
         self.contentView.loadingMoreView?.stopAnimating()
         self.displayError(error: error)
     }
     
-    func didReceivedCurrentPopularMovies() {
+    func didReceivedMovies() {
         self.contentView.reload()
-        self.contentView.collectionViewBackground?.stopAnimating()
+        self.contentView.collectionViewBackground.stopAnimating()
         self.contentView.loadingMoreView?.stopAnimating()
     }
     
+    // TODO: co-ordinator
     func didSelectItemAt(indexPath: IndexPath) {
         let controller = MovieInfoController()
         let viewModel = MovieInfoViewModel(connection: ApiConnections())
         viewModel.movie = self.viewModel.moviesArray[indexPath.row]
-//        viewModel.movie.id = 19404
         controller.viewModel = viewModel
         self.navigationController?.pushViewController(controller, animated: true)
     }

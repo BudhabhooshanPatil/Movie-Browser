@@ -9,10 +9,8 @@
 import Foundation
 import UIKit
 
-class Helper: NSObject
-{
-    class func addBlurView(_ inView : UIView) -> UIVisualEffectView
-    {
+class Helper: NSObject {
+    class func addBlurView(_ inView : UIView) -> UIVisualEffectView {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         
@@ -24,8 +22,7 @@ class Helper: NSObject
         return blurEffectView
     }
     
-   class func date(releaseDate:String) -> String
-   {
+   class func date(releaseDate:String) -> String {
         
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
