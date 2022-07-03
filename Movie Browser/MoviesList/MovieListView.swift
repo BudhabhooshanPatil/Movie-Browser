@@ -13,9 +13,11 @@ class MovieListView: UIView {
     var viewModel: MovieListViewModel?
     var loadingMoreView: ActivityIndicatorView?
     
-    var collectionViewBackground: ActivityIndicatorView{
-        return ActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-    }
+    let activityIndicator: ActivityIndicatorView = {
+        let indicator = ActivityIndicatorView()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
     
     lazy var collectionView: UICollectionView = {
         
@@ -39,9 +41,6 @@ class MovieListView: UIView {
         insets.bottom += ActivityIndicatorView.defaultHeight
         collectionview.contentInset = insets
         
-        collectionview.backgroundView = collectionViewBackground
-        collectionViewBackground.center = self.center
-
         return collectionview
     }()
     
@@ -55,6 +54,7 @@ class MovieListView: UIView {
     
     private func setupViews() {
         self.addSubview(self.collectionView)
+        self.addSubview(self.activityIndicator)
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
@@ -65,6 +65,13 @@ class MovieListView: UIView {
             self.collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.activityIndicator.topAnchor.constraint(equalTo: self.topAnchor),
+            self.activityIndicator.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.activityIndicator.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.activityIndicator.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
     }
     

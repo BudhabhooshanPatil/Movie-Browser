@@ -50,15 +50,13 @@ class MovieListViewModel: NSObject {
         return self
     }
     
-    public func reset(){
+    public func reset() -> MovieListViewModel {
         self.moviesArray = []
         self.currentPage = 0
+        return self
     }
     
-    public func load(shouldReset:Bool = false) {
-        if shouldReset {
-            self.reset()
-        }
+    public func load() {
         
         self.loadMovies { [weak self] response in
             guard let self = self else { return }

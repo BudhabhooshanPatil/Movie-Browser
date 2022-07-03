@@ -24,6 +24,7 @@ class MoviesListController: UIViewController{
         self.setupLayouts()
         self.setupNavigationBar()
         self.viewModel.delegate = self
+        self.contentView.activityIndicator.startAnimating()
         self.viewModel.popular().load()
     }
     
@@ -49,23 +50,23 @@ class MoviesListController: UIViewController{
         
         // TODO: optimize
         let popularHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
-            self?.contentView.collectionViewBackground.startAnimating()
-            self?.viewModel.popular().load(shouldReset: true)
+            self?.contentView.activityIndicator.startAnimating()
+            self?.viewModel.popular().reset().load()
         }
         
         let upComingHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
-            self?.contentView.collectionViewBackground.startAnimating()
-            self?.viewModel.upComing().load(shouldReset: true)
+            self?.contentView.activityIndicator.startAnimating()
+            self?.viewModel.reset().upComing().load()
         }
         
         let topRatedHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
-            self?.contentView.collectionViewBackground.startAnimating()
-            self?.viewModel.topRated().load(shouldReset: true)
+            self?.contentView.activityIndicator.startAnimating()
+            self?.viewModel.reset().topRated().load()
         }
         
         let nowPlayingHandler = { [weak self] (alertAction: UIAlertAction) -> Void in
-            self?.contentView.collectionViewBackground.startAnimating()
-            self?.viewModel.nowPlaying().load(shouldReset: true)
+            self?.contentView.activityIndicator.startAnimating()
+            self?.viewModel.reset().nowPlaying().load()
         }
         
         let cancelHandler = {(alertAction: UIAlertAction) -> Void in
@@ -108,14 +109,14 @@ class MoviesListController: UIViewController{
 extension MoviesListController: MovieListViewModelDelegate {
     
     func didReceivedError(error: TMDBException) {
-        self.contentView.collectionViewBackground.stopAnimating()
+        self.contentView.activityIndicator.stopAnimating()
         self.contentView.loadingMoreView?.stopAnimating()
         self.displayError(error: error)
     }
     
     func didReceivedMovies() {
         self.contentView.reload()
-        self.contentView.collectionViewBackground.stopAnimating()
+        self.contentView.activityIndicator.stopAnimating()
         self.contentView.loadingMoreView?.stopAnimating()
     }
     
